@@ -36,8 +36,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.shapelet.ui.theme.ShapeletTheme
 
-// TODO work on ability to hit node more than once
-// TODO work on submitting
+// TODO more logic about requiring at least 2 characters to submit
+// TODO check words against dictionary
+// TODO better UI, draw lines
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,10 +58,11 @@ class MainActivity : ComponentActivity() {
 private fun Board() {
     var activatedOrder by rememberSaveable { mutableStateOf(listOf<Int>()) }
 
+    val letters = listOf("N", "L", "B", "W", "C", "A", "K", "G", "E", "U", "R", "O")
+
     fun getOnClickForNode(nodeNumber: Int, nodeSide: Set<Int>): () -> Unit {
         return {
-            if (activatedOrder.isEmpty() ||
-                (nodeNumber !in activatedOrder && activatedOrder.last() !in nodeSide)) {
+            if (activatedOrder.isEmpty() || activatedOrder.last() !in nodeSide) {
                 activatedOrder = activatedOrder.toMutableList().apply { add(nodeNumber) }.toList()
             }
         }
@@ -69,12 +71,23 @@ private fun Board() {
     Column(modifier = Modifier.fillMaxSize()) {
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 30.dp, top = 230.dp, end = 30.dp),
+            .padding(start = 10.dp, top = 100.dp, end = 10.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(text = activatedOrder.joinToString("") {
+                if (it == -1) " - "
+                else letters[it]
+            })
+        }
+        Spacer(modifier = Modifier.size(100.dp))
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 30.dp, end = 30.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Node(1, activatedOrder, getOnClickForNode(1, setOf(1,2,3)))
-            Node(2, activatedOrder, getOnClickForNode(2, setOf(1,2,3)))
-            Node(3, activatedOrder, getOnClickForNode(3, setOf(1,2,3)))
+            Node(0, letters[0], activatedOrder, getOnClickForNode(0, setOf(0,1,2)))
+            Node(1, letters[1], activatedOrder, getOnClickForNode(1, setOf(0,1,2)))
+            Node(2, letters[2], activatedOrder, getOnClickForNode(2, setOf(0,1,2)))
         }
         Spacer(modifier = Modifier.size(30.dp))
         Row(modifier = Modifier
@@ -82,8 +95,8 @@ private fun Board() {
             .padding(start = 10.dp, end = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Node(4, activatedOrder, getOnClickForNode(4, setOf(4,5,6)))
-            Node(7, activatedOrder, getOnClickForNode(7, setOf(7,8,9)))
+            Node(3, letters[3], activatedOrder, getOnClickForNode(3, setOf(3,4,5)))
+            Node(6, letters[6], activatedOrder, getOnClickForNode(6, setOf(6,7,8)))
         }
         Spacer(modifier = Modifier.size(30.dp))
         Row(modifier = Modifier
@@ -91,8 +104,8 @@ private fun Board() {
             .padding(start = 10.dp, end = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Node(5, activatedOrder, getOnClickForNode(5, setOf(4,5,6)))
-            Node(8, activatedOrder, getOnClickForNode(8, setOf(7,8,9)))
+            Node(4, letters[4], activatedOrder, getOnClickForNode(4, setOf(3,4,5)))
+            Node(7, letters[7], activatedOrder, getOnClickForNode(7, setOf(6,7,8)))
         }
         Spacer(modifier = Modifier.size(30.dp))
         Row(modifier = Modifier
@@ -100,8 +113,8 @@ private fun Board() {
             .padding(start = 10.dp, end = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Node(6, activatedOrder, getOnClickForNode(6, setOf(4,5,6)))
-            Node(9, activatedOrder, getOnClickForNode(9, setOf(7,8,9)))
+            Node(5, letters[5], activatedOrder, getOnClickForNode(5, setOf(3,4,5)))
+            Node(8, letters[8], activatedOrder, getOnClickForNode(8, setOf(6,7,8)))
         }
         Spacer(modifier = Modifier.size(30.dp))
         Row(modifier = Modifier
@@ -109,9 +122,9 @@ private fun Board() {
             .padding(start = 30.dp, end = 30.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Node(10, activatedOrder, getOnClickForNode(10, setOf(10,11,12)))
-            Node(11, activatedOrder, getOnClickForNode(11, setOf(10,11,12)))
-            Node(12, activatedOrder, getOnClickForNode(12, setOf(10,11,12)))
+            Node(9, letters[9], activatedOrder, getOnClickForNode(9, setOf(9,10,11)))
+            Node(10, letters[10], activatedOrder, getOnClickForNode(10, setOf(9,10,11)))
+            Node(11, letters[11], activatedOrder, getOnClickForNode(11, setOf(9,10,11)))
         }
         Spacer(modifier = Modifier.size(80.dp))
         Row(modifier = Modifier
@@ -125,7 +138,13 @@ private fun Board() {
             }
             Spacer(modifier = Modifier.size(30.dp))
             Button(onClick = {
-
+                if (activatedOrder.isNotEmpty()) {
+                    val lastLetter = activatedOrder.last()
+                    activatedOrder = activatedOrder.toMutableList().apply {
+                        add(-1)
+                        add(lastLetter)
+                    }.toList()
+                }
             }) {
                 Text(text = "Submit")
             }
@@ -135,7 +154,7 @@ private fun Board() {
 }
 
 @Composable
-private fun Node(id: Int, activatedOrder: List<Int>, onClick: () -> Unit) {
+private fun Node(id: Int, letter: String, activatedOrder: List<Int>, onClick: () -> Unit) {
     val activated = id in activatedOrder
     val lastActivated = activatedOrder.isNotEmpty() && activatedOrder.last() == id
 
@@ -159,6 +178,6 @@ private fun Node(id: Int, activatedOrder: List<Int>, onClick: () -> Unit) {
         onClick = onClick,
         border = border
     ) {
-        Text(text = id.toString())
+        Text(text = letter)
     }
 }
