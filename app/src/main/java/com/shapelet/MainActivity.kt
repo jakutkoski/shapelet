@@ -7,15 +7,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -31,8 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.shapelet.ui.theme.ShapeletTheme
 
+// TODO draw lines
 // TODO check words against dictionary
-// TODO better UI, draw lines
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -162,22 +164,23 @@ private fun Node(id: Int, letter: String, activatedOrder: List<Int>, onClick: ()
     val activated = id in activatedOrder
     val lastActivated = activatedOrder.isNotEmpty() && activatedOrder.last() == id
 
-    var border: BorderStroke? = null
-    var color = Color(0x990AC27B)
+    var border: BorderStroke? = BorderStroke(1.dp, Color.Black)
     when {
         activated && lastActivated -> {
-            border = BorderStroke(1.dp, Color.Black)
+            border = BorderStroke(2.dp, Color(0xFF0AC27B))
         }
         activated -> {
-            border = BorderStroke(2.dp, Color.Black)
-            color = Color(0xFF0AC27B)
+            border = BorderStroke(1.dp, Color(0xFF0AC27B))
         }
     }
 
     OutlinedButton(
+        shape = RoundedCornerShape(CornerSize(0)),
+        modifier = Modifier.size(45.dp),
+        contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = color,
-            contentColor = Color.White
+            containerColor = Color.White,
+            contentColor = Color.Black
         ),
         onClick = onClick,
         border = border
