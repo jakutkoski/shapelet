@@ -1,6 +1,7 @@
 package com.shapelet
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -42,6 +43,8 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
 import com.shapelet.ui.theme.ShapeletTheme
 
+// TODO figure out ViewModel
+// TODO create other types of boards
 // TODO check words against dictionary
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +54,9 @@ class MainActivity : ComponentActivity() {
             ShapeletTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     println(innerPadding) // TODO wtf do with this?
-                    Board()
+                    Board("BSAGKOZRUEIT") {
+                        Toast.makeText(this@MainActivity, "You did it!", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -59,7 +64,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Board() {
+private fun Board(letterString: String, onComplete: () -> Unit) {
     var activatedOrder by rememberSaveable { mutableStateOf(listOf<Int>()) }
     var node0offset by remember { mutableStateOf(Offset.Zero) }
     var node1offset by remember { mutableStateOf(Offset.Zero) }
@@ -76,8 +81,12 @@ private fun Board() {
     var nodeWidth by remember { mutableFloatStateOf(0.0f) }
     var nodeHeight by remember { mutableFloatStateOf(0.0f) }
 
-    val letterString = "BSAGKOZRUEIT"
     val letters = letterString.toList().map { it.toString() }
+    val indicators = listOf(Constants.SUBMIT, Constants.COMPLETE)
+
+    fun checkComplete(): Boolean {
+        return activatedOrder.containsAll(setOf(0,1,2,3,4,5,6,7,8,9,10,11))
+    }
 
     fun getOnClick(nodeNumber: Int, nodeSide: Set<Int>): () -> Unit {
         return {
@@ -137,17 +146,18 @@ private fun Board() {
 
         if (activatedOrder.size >= 2) {
             val lastSubmit = activatedOrder.lastIndexOf(Constants.SUBMIT)
+            val completed = activatedOrder.lastIndexOf(Constants.COMPLETE) != -1
             var i = 0
             while (i + 1 < activatedOrder.size) {
                 val firstNode = activatedOrder[i]
                 val secondNode = activatedOrder[i + 1]
-                if (firstNode != Constants.SUBMIT && secondNode != Constants.SUBMIT) {
+                if (firstNode !in indicators && secondNode !in indicators) {
                     drawLine(
                         start = getCenteredNodeOffset(firstNode),
                         end = getCenteredNodeOffset(secondNode),
-                        color = if (i + 1 < lastSubmit) Constants.ACTIVATION_GREEN else Color.Black,
+                        color = if (completed || i + 1 < lastSubmit) Constants.ACTIVATION_GREEN_TRANSPARENT else Color.Black,
                         strokeWidth = 4.0f,
-                        pathEffect = if (i + 1 < lastSubmit) null else Constants.DOTTED_PATH_EFFECT
+                        pathEffect = if (completed || i + 1 < lastSubmit) null else Constants.DOTTED_PATH_EFFECT
                     )
                 }
                 i++
@@ -163,8 +173,11 @@ private fun Board() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(text = activatedOrder.joinToString("") {
-                if (it == Constants.SUBMIT) " - "
-                else letters[it]
+                when (it) {
+                    Constants.SUBMIT -> " - "
+                    Constants.COMPLETE -> ""
+                    else -> letters[it]
+                }
             }, modifier = Modifier.fillMaxHeight())
         }
         Spacer(modifier = Modifier.size(10.dp))
@@ -262,6 +275,7 @@ private fun Board() {
             Spacer(modifier = Modifier.size(30.dp))
             Button(onClick = onClick@{
                 if (activatedOrder.isEmpty()) return@onClick
+                if (activatedOrder.lastIndexOf(Constants.COMPLETE) != -1) return@onClick
                 val lastLetter = activatedOrder.last()
                 val startOfMostRecentWord = activatedOrder
                     .lastIndexOf(Constants.SUBMIT)
@@ -272,10 +286,17 @@ private fun Board() {
                     .subList(startOfMostRecentWord, activatedOrder.size)
                     .dropWhile { it == Constants.SUBMIT }
                 if (mostRecentWord.size < 3) return@onClick
-                activatedOrder = activatedOrder.toMutableList().apply {
-                    add(Constants.SUBMIT)
-                    add(lastLetter)
-                }.toList()
+                if (checkComplete()) {
+                    activatedOrder = activatedOrder.toMutableList().apply {
+                        add(Constants.COMPLETE)
+                    }.toList()
+                    onComplete()
+                } else {
+                    activatedOrder = activatedOrder.toMutableList().apply {
+                        add(Constants.SUBMIT)
+                        add(lastLetter)
+                    }.toList()
+                }
             }) {
                 Text(text = "Submit")
             }
@@ -324,6 +345,8 @@ private fun Node(
 
 object Constants {
     const val SUBMIT = -99
+    const val COMPLETE = -100
     val DOTTED_PATH_EFFECT = PathEffect.dashPathEffect(listOf(15.0f, 15.0f).toFloatArray(), 15.0f)
     val ACTIVATION_GREEN = Color(0xFF0AC27B)
+    val ACTIVATION_GREEN_TRANSPARENT = Color(0x440AC27B)
 }
