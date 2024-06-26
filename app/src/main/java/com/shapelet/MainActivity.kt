@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,13 +34,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
 import com.shapelet.ui.theme.ShapeletTheme
 
-// TODO prettify line drawing, dotted lines for un-submitted, etc.
 // TODO check words against dictionary
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,18 +61,20 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun Board() {
     var activatedOrder by rememberSaveable { mutableStateOf(listOf<Int>()) }
-    var node0Position by remember { mutableStateOf(Offset.Zero) }
-    var node1Position by remember { mutableStateOf(Offset.Zero) }
-    var node2Position by remember { mutableStateOf(Offset.Zero) }
-    var node3Position by remember { mutableStateOf(Offset.Zero) }
-    var node4Position by remember { mutableStateOf(Offset.Zero) }
-    var node5Position by remember { mutableStateOf(Offset.Zero) }
-    var node6Position by remember { mutableStateOf(Offset.Zero) }
-    var node7Position by remember { mutableStateOf(Offset.Zero) }
-    var node8Position by remember { mutableStateOf(Offset.Zero) }
-    var node9Position by remember { mutableStateOf(Offset.Zero) }
-    var node10Position by remember { mutableStateOf(Offset.Zero) }
-    var node11Position by remember { mutableStateOf(Offset.Zero) }
+    var node0offset by remember { mutableStateOf(Offset.Zero) }
+    var node1offset by remember { mutableStateOf(Offset.Zero) }
+    var node2offset by remember { mutableStateOf(Offset.Zero) }
+    var node3offset by remember { mutableStateOf(Offset.Zero) }
+    var node4offset by remember { mutableStateOf(Offset.Zero) }
+    var node5offset by remember { mutableStateOf(Offset.Zero) }
+    var node6offset by remember { mutableStateOf(Offset.Zero) }
+    var node7offset by remember { mutableStateOf(Offset.Zero) }
+    var node8offset by remember { mutableStateOf(Offset.Zero) }
+    var node9offset by remember { mutableStateOf(Offset.Zero) }
+    var node10offset by remember { mutableStateOf(Offset.Zero) }
+    var node11offset by remember { mutableStateOf(Offset.Zero) }
+    var nodeWidth by remember { mutableFloatStateOf(0.0f) }
+    var nodeHeight by remember { mutableFloatStateOf(0.0f) }
 
     val letterString = "BSAGKOZRUEIT"
     val letters = letterString.toList().map { it.toString() }
@@ -83,37 +87,67 @@ private fun Board() {
         }
     }
 
-    fun getNodePosition(nodeNumber: Int): Offset {
-        return when(nodeNumber) {
-            0 -> node0Position
-            1 -> node1Position
-            2 -> node2Position
-            3 -> node3Position
-            4 -> node4Position
-            5 -> node5Position
-            6 -> node6Position
-            7 -> node7Position
-            8 -> node8Position
-            9 -> node9Position
-            10 -> node10Position
-            11 -> node11Position
+    fun getCenteredNodeOffset(nodeNumber: Int): Offset {
+        val originalOffset = when(nodeNumber) {
+            0 -> node0offset
+            1 -> node1offset
+            2 -> node2offset
+            3 -> node3offset
+            4 -> node4offset
+            5 -> node5offset
+            6 -> node6offset
+            7 -> node7offset
+            8 -> node8offset
+            9 -> node9offset
+            10 -> node10offset
+            11 -> node11offset
             else -> Offset.Zero
         }
+        return originalOffset.plus(Offset(nodeWidth/2.0f, nodeHeight/2.0f))
     }
 
     Canvas(modifier = Modifier.fillMaxSize()) {
+        drawLine(
+            start = getCenteredNodeOffset(0),
+            end = getCenteredNodeOffset(2),
+            color = Color.Black,
+            strokeWidth = 4.0f
+        )
+
+        drawLine(
+            start = getCenteredNodeOffset(3),
+            end = getCenteredNodeOffset(5),
+            color = Color.Black,
+            strokeWidth = 4.0f
+        )
+
+        drawLine(
+            start = getCenteredNodeOffset(6),
+            end = getCenteredNodeOffset(8),
+            color = Color.Black,
+            strokeWidth = 4.0f
+        )
+
+        drawLine(
+            start = getCenteredNodeOffset(9),
+            end = getCenteredNodeOffset(11),
+            color = Color.Black,
+            strokeWidth = 4.0f
+        )
+
         if (activatedOrder.size >= 2) {
+            val lastSubmit = activatedOrder.lastIndexOf(Constants.SUBMIT)
             var i = 0
             while (i + 1 < activatedOrder.size) {
                 val firstNode = activatedOrder[i]
-                val secondNode = activatedOrder[i+1]
+                val secondNode = activatedOrder[i + 1]
                 if (firstNode != Constants.SUBMIT && secondNode != Constants.SUBMIT) {
-                    val firstNodePosition = getNodePosition(firstNode)
-                    val secondNodePosition = getNodePosition(secondNode)
                     drawLine(
-                        start = firstNodePosition,
-                        end = secondNodePosition,
-                        color = Color.Black
+                        start = getCenteredNodeOffset(firstNode),
+                        end = getCenteredNodeOffset(secondNode),
+                        color = if (i + 1 < lastSubmit) Constants.ACTIVATION_GREEN else Color.Black,
+                        strokeWidth = 4.0f,
+                        pathEffect = if (i + 1 < lastSubmit) null else Constants.DOTTED_PATH_EFFECT
                     )
                 }
                 i++
@@ -140,13 +174,15 @@ private fun Board() {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Node(0, letters[0], activatedOrder, getOnClick(0, setOf(0,1,2))) {
-                node0Position = it.positionInRoot()
+                node0offset = it.positionInRoot()
+                nodeWidth = it.boundsInRoot().width
+                nodeHeight = it.boundsInRoot().height
             }
             Node(1, letters[1], activatedOrder, getOnClick(1, setOf(0,1,2))) {
-                node1Position = it.positionInRoot()
+                node1offset = it.positionInRoot()
             }
             Node(2, letters[2], activatedOrder, getOnClick(2, setOf(0,1,2))) {
-                node2Position = it.positionInRoot()
+                node2offset = it.positionInRoot()
             }
         }
         Spacer(modifier = Modifier.size(30.dp))
@@ -156,10 +192,10 @@ private fun Board() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Node(3, letters[3], activatedOrder, getOnClick(3, setOf(3,4,5))) {
-                node3Position = it.positionInRoot()
+                node3offset = it.positionInRoot()
             }
             Node(6, letters[6], activatedOrder, getOnClick(6, setOf(6,7,8))) {
-                node6Position = it.positionInRoot()
+                node6offset = it.positionInRoot()
             }
         }
         Spacer(modifier = Modifier.size(30.dp))
@@ -169,10 +205,10 @@ private fun Board() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Node(4, letters[4], activatedOrder, getOnClick(4, setOf(3,4,5))) {
-                node4Position = it.positionInRoot()
+                node4offset = it.positionInRoot()
             }
             Node(7, letters[7], activatedOrder, getOnClick(7, setOf(6,7,8))) {
-                node7Position = it.positionInRoot()
+                node7offset = it.positionInRoot()
             }
         }
         Spacer(modifier = Modifier.size(30.dp))
@@ -182,10 +218,10 @@ private fun Board() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Node(5, letters[5], activatedOrder, getOnClick(5, setOf(3,4,5))) {
-                node5Position = it.positionInRoot()
+                node5offset = it.positionInRoot()
             }
             Node(8, letters[8], activatedOrder, getOnClick(8, setOf(6,7,8))) {
-                node8Position = it.positionInRoot()
+                node8offset = it.positionInRoot()
             }
         }
         Spacer(modifier = Modifier.size(30.dp))
@@ -195,13 +231,13 @@ private fun Board() {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Node(9, letters[9], activatedOrder, getOnClick(9, setOf(9,10,11))) {
-                node9Position = it.positionInRoot()
+                node9offset = it.positionInRoot()
             }
             Node(10, letters[10], activatedOrder, getOnClick(10, setOf(9,10,11))) {
-                node10Position = it.positionInRoot()
+                node10offset = it.positionInRoot()
             }
             Node(11, letters[11], activatedOrder, getOnClick(11, setOf(9,10,11))) {
-                node11Position = it.positionInRoot()
+                node11offset = it.positionInRoot()
             }
         }
         Spacer(modifier = Modifier.size(80.dp))
@@ -262,10 +298,10 @@ private fun Node(
     var border: BorderStroke? = BorderStroke(1.dp, Color.Black)
     when {
         activated && lastActivated -> {
-            border = BorderStroke(2.dp, Color(0xFF0AC27B))
+            border = BorderStroke(3.dp, Constants.ACTIVATION_GREEN)
         }
         activated -> {
-            border = BorderStroke(1.dp, Color(0xFF0AC27B))
+            border = BorderStroke(1.dp, Constants.ACTIVATION_GREEN)
         }
     }
 
@@ -288,4 +324,6 @@ private fun Node(
 
 object Constants {
     const val SUBMIT = -99
+    val DOTTED_PATH_EFFECT = PathEffect.dashPathEffect(listOf(15.0f, 15.0f).toFloatArray(), 15.0f)
+    val ACTIVATION_GREEN = Color(0xFF0AC27B)
 }
