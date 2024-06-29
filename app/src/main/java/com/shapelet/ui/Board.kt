@@ -35,9 +35,14 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
+import com.shapelet.Dictionary
 
 @Composable
-fun Board(letterString: String, onComplete: () -> Unit) {
+fun Board(
+    letterString: String,
+    onComplete: () -> Unit,
+    onInvalidWord: () -> Unit
+) {
     var activatedOrder by rememberSaveable { mutableStateOf(listOf<Int>()) }
     var node0offset by remember { mutableStateOf(Offset.Zero) }
     var node1offset by remember { mutableStateOf(Offset.Zero) }
@@ -56,6 +61,12 @@ fun Board(letterString: String, onComplete: () -> Unit) {
 
     val letters = letterString.toList().map { it.toString() }
     val indicators = listOf(Constants.SUBMIT, Constants.COMPLETE)
+
+    fun getWord(indices: List<Int>): String {
+        return indices.joinToString("") {
+            letters[it]
+        }
+    }
 
     fun checkComplete(): Boolean {
         return activatedOrder.containsAll(setOf(0,1,2,3,4,5,6,7,8,9,10,11))
@@ -149,7 +160,7 @@ fun Board(letterString: String, onComplete: () -> Unit) {
                 when (it) {
                     Constants.SUBMIT -> " - "
                     Constants.COMPLETE -> ""
-                    else -> letters[it]
+                    else -> letters[it].uppercase()
                 }
             }, modifier = Modifier.fillMaxHeight())
         }
@@ -259,6 +270,10 @@ fun Board(letterString: String, onComplete: () -> Unit) {
                     .subList(startOfMostRecentWord, activatedOrder.size)
                     .dropWhile { it == Constants.SUBMIT }
                 if (mostRecentWord.size < 3) return@onClick
+                if (getWord(mostRecentWord) !in Dictionary.words()) {
+                    onInvalidWord()
+                    return@onClick
+                }
                 if (checkComplete()) {
                     activatedOrder = activatedOrder.toMutableList().apply {
                         add(Constants.COMPLETE)
@@ -312,7 +327,7 @@ private fun Node(
         onClick = onClick,
         border = border
     ) {
-        Text(text = letter)
+        Text(text = letter.uppercase())
     }
 }
 
