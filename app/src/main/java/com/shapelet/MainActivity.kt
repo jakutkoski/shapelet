@@ -11,7 +11,6 @@ import com.shapelet.ui.theme.ShapeletTheme
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-// TODO create other types of boards
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
