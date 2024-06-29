@@ -29,16 +29,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
+import com.shapelet.Constants
 import com.shapelet.Dictionary
 
 @Composable
-fun Board(
+fun Cup3Board(
     letterString: String,
     onComplete: () -> Unit,
     onInvalidWord: () -> Unit
@@ -53,9 +53,6 @@ fun Board(
     var node6offset by remember { mutableStateOf(Offset.Zero) }
     var node7offset by remember { mutableStateOf(Offset.Zero) }
     var node8offset by remember { mutableStateOf(Offset.Zero) }
-    var node9offset by remember { mutableStateOf(Offset.Zero) }
-    var node10offset by remember { mutableStateOf(Offset.Zero) }
-    var node11offset by remember { mutableStateOf(Offset.Zero) }
     var nodeWidth by remember { mutableFloatStateOf(0.0f) }
     var nodeHeight by remember { mutableFloatStateOf(0.0f) }
 
@@ -69,7 +66,7 @@ fun Board(
     }
 
     fun checkComplete(): Boolean {
-        return activatedOrder.containsAll(setOf(0,1,2,3,4,5,6,7,8,9,10,11))
+        return activatedOrder.containsAll(setOf(0,1,2,3,4,5,6,7,8))
     }
 
     fun getOnClick(nodeNumber: Int, nodeSide: Set<Int>): () -> Unit {
@@ -91,9 +88,6 @@ fun Board(
             6 -> node6offset
             7 -> node7offset
             8 -> node8offset
-            9 -> node9offset
-            10 -> node10offset
-            11 -> node11offset
             else -> Offset.Zero
         }
         return originalOffset.plus(Offset(nodeWidth/2.0f, nodeHeight/2.0f))
@@ -117,13 +111,6 @@ fun Board(
         drawLine(
             start = getCenteredNodeOffset(6),
             end = getCenteredNodeOffset(8),
-            color = Color.Black,
-            strokeWidth = 4.0f
-        )
-
-        drawLine(
-            start = getCenteredNodeOffset(9),
-            end = getCenteredNodeOffset(11),
             color = Color.Black,
             strokeWidth = 4.0f
         )
@@ -165,35 +152,20 @@ fun Board(
             }, modifier = Modifier.fillMaxHeight())
         }
         Spacer(modifier = Modifier.size(10.dp))
+        Spacer(modifier = Modifier.size(30.dp))
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 30.dp, end = 30.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            .padding(start = 10.dp, end = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Node(0, letters[0], activatedOrder, getOnClick(0, setOf(0,1,2))) {
                 node0offset = it.positionInRoot()
                 nodeWidth = it.boundsInRoot().width
                 nodeHeight = it.boundsInRoot().height
             }
-            Node(1, letters[1], activatedOrder, getOnClick(1, setOf(0,1,2))) {
-                node1offset = it.positionInRoot()
-            }
-            Node(2, letters[2], activatedOrder, getOnClick(2, setOf(0,1,2))) {
-                node2offset = it.positionInRoot()
-            }
-        }
-        Spacer(modifier = Modifier.size(30.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
             Node(3, letters[3], activatedOrder, getOnClick(3, setOf(3,4,5))) {
                 node3offset = it.positionInRoot()
             }
-            Node(6, letters[6], activatedOrder, getOnClick(6, setOf(6,7,8))) {
-                node6offset = it.positionInRoot()
-            }
         }
         Spacer(modifier = Modifier.size(30.dp))
         Row(modifier = Modifier
@@ -201,12 +173,12 @@ fun Board(
             .padding(start = 10.dp, end = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Node(1, letters[1], activatedOrder, getOnClick(1, setOf(0,1,2))) {
+                node1offset = it.positionInRoot()
+            }
             Node(4, letters[4], activatedOrder, getOnClick(4, setOf(3,4,5))) {
                 node4offset = it.positionInRoot()
             }
-            Node(7, letters[7], activatedOrder, getOnClick(7, setOf(6,7,8))) {
-                node7offset = it.positionInRoot()
-            }
         }
         Spacer(modifier = Modifier.size(30.dp))
         Row(modifier = Modifier
@@ -214,11 +186,11 @@ fun Board(
             .padding(start = 10.dp, end = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Node(2, letters[2], activatedOrder, getOnClick(2, setOf(0,1,2))) {
+                node2offset = it.positionInRoot()
+            }
             Node(5, letters[5], activatedOrder, getOnClick(5, setOf(3,4,5))) {
                 node5offset = it.positionInRoot()
-            }
-            Node(8, letters[8], activatedOrder, getOnClick(8, setOf(6,7,8))) {
-                node8offset = it.positionInRoot()
             }
         }
         Spacer(modifier = Modifier.size(30.dp))
@@ -227,14 +199,14 @@ fun Board(
             .padding(start = 30.dp, end = 30.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Node(9, letters[9], activatedOrder, getOnClick(9, setOf(9,10,11))) {
-                node9offset = it.positionInRoot()
+            Node(6, letters[6], activatedOrder, getOnClick(6, setOf(6,7,8))) {
+                node6offset = it.positionInRoot()
             }
-            Node(10, letters[10], activatedOrder, getOnClick(10, setOf(9,10,11))) {
-                node10offset = it.positionInRoot()
+            Node(7, letters[7], activatedOrder, getOnClick(7, setOf(6,7,8))) {
+                node7offset = it.positionInRoot()
             }
-            Node(11, letters[11], activatedOrder, getOnClick(11, setOf(9,10,11))) {
-                node11offset = it.positionInRoot()
+            Node(8, letters[8], activatedOrder, getOnClick(8, setOf(6,7,8))) {
+                node8offset = it.positionInRoot()
             }
         }
         Spacer(modifier = Modifier.size(80.dp))
@@ -329,12 +301,4 @@ private fun Node(
     ) {
         Text(text = letter.uppercase())
     }
-}
-
-object Constants {
-    const val SUBMIT = -99
-    const val COMPLETE = -100
-    val DOTTED_PATH_EFFECT = PathEffect.dashPathEffect(listOf(15.0f, 15.0f).toFloatArray(), 15.0f)
-    val ACTIVATION_GREEN = Color(0xFF0AC27B)
-    val ACTIVATION_GREEN_TRANSPARENT = Color(0x440AC27B)
 }
