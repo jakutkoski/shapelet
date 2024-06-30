@@ -1,5 +1,8 @@
 TODO:
 implement board encoding features within box3
+decide board encoding
+handle double deduction when usageLimit letter is at end of word
+implement rest of board types
 explore some UI improvements
 explore optimizations - binary search, line drawing cache, etc.
 abstractions - ViewModel, data layer, dependency injection
@@ -21,13 +24,13 @@ board types:
 board encoding:
 
 ```
-type|letters|usageBonus|usageLimits|comboBonus|nonComboBonus|largeWord|largeWordHint
+type|letter-usageBonus-usageLimit|comboBonus|nonComboBonus|largeWord|largeWordHint
 ```
 
 example of board encoding:
 
 ```
-box3|jxzrcaueloin|101000000000|000300000003|Z|37|journalize|documenting events
+box3|j10x00z10r03c00a00u00e00l00o00i00n03|Z|37|journalize|documenting events
 ```
 
 This encoding would create:
