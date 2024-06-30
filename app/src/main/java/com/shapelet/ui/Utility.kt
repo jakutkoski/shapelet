@@ -83,6 +83,8 @@ object Utility {
 
     fun getSubmitOnClick(
         puzzle: List<PuzzleLetter>,
+        comboPairs: List<Pair<Int, Int>>,
+        avoidPairs: List<Pair<Int, Int>>,
         ids: List<Int>,
         onInvalidWord: () -> Unit,
         onComplete: () -> Unit,
@@ -107,7 +109,7 @@ object Utility {
             }
             if (checkCanComplete(puzzle, ids)) {
                 activate(listOf(Constants.COMPLETE))
-                calculateScore(puzzle, ids)
+                calculateScore(puzzle, comboPairs, avoidPairs, ids)
                 onComplete()
             } else {
                 activate(listOf(Constants.SUBMIT, lastId))
@@ -119,7 +121,12 @@ object Utility {
         return offset.plus(Offset(nodeLength/2.0f, nodeLength/2.0f))
     }
 
-    fun calculateScore(puzzle: List<PuzzleLetter>, ids: List<Int>) {
+    fun calculateScore(
+        puzzle: List<PuzzleLetter>,
+        comboPairs: List<Pair<Int, Int>>,
+        avoidPairs: List<Pair<Int, Int>>,
+        ids: List<Int>
+    ) {
         val amountOfWords = ids.count {
             it in Constants.INDICATORS
         }
@@ -143,6 +150,7 @@ object Utility {
         }
         println("amountOfUsageBonus = $amountOfUsageBonus")
         score += 5 * amountOfUsageBonus
+        // TODO logic for comboPairs and avoidPairs
         println("score = $score")
     }
 
@@ -176,7 +184,7 @@ object Utility {
                             Constants.ACTIVATION_GREEN_TRANSPARENT
                         else
                             Color.Black,
-                        strokeWidth = 4.0f,
+                        strokeWidth = Constants.STROKE_WIDTH,
                         pathEffect = if (completed || i + 1 < lastSubmitIndex)
                             null
                         else
@@ -185,6 +193,38 @@ object Utility {
                 }
                 i++
             }
+        }
+    }
+
+    fun drawComboLines(
+        drawScope: DrawScope,
+        comboPairs: List<Pair<Int, Int>>,
+        nodeLength: Float,
+        offsetOf: (Int) -> Offset
+    ) {
+        comboPairs.forEach { combo ->
+            drawScope.drawLine(
+                start = centerNodeOffset(offsetOf(combo.first), nodeLength),
+                end = centerNodeOffset(offsetOf(combo.second), nodeLength),
+                color = Color(0x220000FF),
+                strokeWidth = 15.0f
+            )
+        }
+    }
+
+    fun drawAvoidLines(
+        drawScope: DrawScope,
+        avoidPairs: List<Pair<Int, Int>>,
+        nodeLength: Float,
+        offsetOf: (Int) -> Offset
+    ) {
+        avoidPairs.forEach { combo ->
+            drawScope.drawLine(
+                start = centerNodeOffset(offsetOf(combo.first), nodeLength),
+                end = centerNodeOffset(offsetOf(combo.second), nodeLength),
+                color = Color(0x22FF0000),
+                strokeWidth = 15.0f
+            )
         }
     }
 }
