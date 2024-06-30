@@ -1,17 +1,14 @@
 package com.shapelet
 
-import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
 import com.shapelet.ui.Box3Board
+import com.shapelet.ui.Dictionary
+import com.shapelet.ui.PuzzleLetter
 import com.shapelet.ui.theme.ShapeletTheme
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +24,7 @@ class MainActivity : ComponentActivity() {
             ShapeletTheme {
                 Box3Board(
                     puzzle = listOf(
-                        PuzzleLetter(0, "j", setOf(0,1,2), true),
+                        PuzzleLetter(0, "j", setOf(0, 1, 2), true),
                         PuzzleLetter(1, "x", setOf(0,1,2)),
                         PuzzleLetter(2, "z", setOf(0,1,2), true),
                         PuzzleLetter(3, "r", setOf(3,4,5), false, 3),
@@ -51,40 +48,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-object Dictionary {
-    private val _words = mutableListOf<String>()
-    private var initialized = false
-
-    fun words() = _words.toList()
-
-    fun initialize(context: Context) {
-        if (initialized) return
-        initialized = true
-        val inputStream = context.assets.open("words.txt")
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        var line = reader.readLine()
-        while (line != null) {
-            _words.add(line)
-            line = reader.readLine()
-        }
-    }
-}
-
-object Constants {
-    const val SUBMIT = -9001
-    const val COMPLETE = -9002
-    const val STROKE_WIDTH = 4.0f
-    val INDICATORS = listOf(SUBMIT, COMPLETE)
-    val DOTTED_PATH_EFFECT = PathEffect.dashPathEffect(listOf(15.0f, 15.0f).toFloatArray(), 15.0f)
-    val ACTIVATION_GREEN = Color(0xFF0AC27B)
-    val ACTIVATION_GREEN_TRANSPARENT = Color(0x440AC27B)
-}
-
-data class PuzzleLetter(
-    val id: Int,
-    val letter: String,
-    val incompatibleIds: Set<Int>,
-    val usageBonus: Boolean = false,
-    val usageLimit: Int? = null
-)
