@@ -1,12 +1,12 @@
 TODO:
 
-- decide how to do hints
 - implement rest of board types
 - explore some UI improvements
 - explore optimizations - hashmap dictionary or binary search, line drawing cache, etc.
 - abstractions - ViewModel, data layer, dependency injection
 - explore more UI improvements
 - create point system and account memory
+- implement hints
 - create menu, settings, etc.
 - create build your own puzzle?
 

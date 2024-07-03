@@ -229,6 +229,12 @@ object Utility {
                 9,10,11 -> setOf(9,10,11)
                 else -> throw Exception("id $id is not valid for board type $boardType")
             }
+            "cup3" -> when (id) {
+                0,1,2 -> setOf(0,1,2)
+                3,4,5 -> setOf(3,4,5)
+                6,7,8 -> setOf(6,7,8)
+                else -> throw Exception("id $id is not valid for board type $boardType")
+            }
             else -> throw Exception("board type $boardType does not exist")
         }
     }
