@@ -1,10 +1,9 @@
 TODO:
 
-- function to decode board
-- implement rest of board types
 - decide how to do hints
+- implement rest of board types
 - explore some UI improvements
-- explore optimizations - binary search, line drawing cache, etc.
+- explore optimizations - hashmap dictionary or binary search, line drawing cache, etc.
 - abstractions - ViewModel, data layer, dependency injection
 - explore more UI improvements
 - create point system and account memory

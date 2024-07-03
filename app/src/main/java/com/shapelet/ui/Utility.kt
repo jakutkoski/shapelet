@@ -192,6 +192,47 @@ object Utility {
             }
         }
     }
+
+    fun decode(boardEncoding: String): Board {
+        val parts = boardEncoding.split("|")
+        val type = parts[0]
+        val letters = parts[1].map { it.toString() }
+        val bonuses = parts[2].map { it.toString().toInt() }
+        val limits = parts[3].map { it.toString().toInt() }
+        val largeWord = parts[4]
+        val largeWordHint = parts[5]
+        val puzzleLetters = letters.mapIndexed { index, letter ->
+            PuzzleLetter(
+                id = index,
+                letter = letter,
+                incompatibleIds = getIncompatibleIds(type, index),
+                usageBonus = bonuses[index] == 1,
+                usageLimit = limits[index].let {
+                    if (it == 0) null
+                    else it
+                }
+            )
+        }
+        return Board(
+            type = type,
+            puzzle = puzzleLetters,
+            largeWord = largeWord,
+            largeWordHint = largeWordHint
+        )
+    }
+
+    fun getIncompatibleIds(boardType: String, id: Int): Set<Int> {
+        return when (boardType) {
+            "box3" -> when (id) {
+                0,1,2 -> setOf(0,1,2)
+                3,4,5 -> setOf(3,4,5)
+                6,7,8 -> setOf(6,7,8)
+                9,10,11 -> setOf(9,10,11)
+                else -> throw Exception("id $id is not valid for board type $boardType")
+            }
+            else -> throw Exception("board type $boardType does not exist")
+        }
+    }
 }
 
 object Dictionary {
@@ -229,4 +270,11 @@ data class PuzzleLetter(
     val incompatibleIds: Set<Int>,
     val usageBonus: Boolean = false,
     val usageLimit: Int? = null
+)
+
+data class Board(
+    val type: String,
+    val puzzle: List<PuzzleLetter>,
+    val largeWord: String,
+    val largeWordHint: String
 )
