@@ -1,6 +1,7 @@
 package com.shapelet.ui
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -50,7 +51,7 @@ object Utility {
         puzzle: List<PuzzleLetter>,
         id: Int,
         ids: List<Int>,
-        activate: (List<Int>) -> Unit
+        activate: (List<Int>) -> List<Int>
     ): () -> Unit {
         return onClick@{
             if (ids.isNotEmpty()) {
@@ -66,7 +67,7 @@ object Utility {
 
     fun getDeleteOnClick(
         ids: List<Int>,
-        delete: (Int) -> Unit
+        delete: (Int) -> List<Int>
     ): () -> Unit {
         return onClick@{
             if (ids.isEmpty()) return@onClick
@@ -83,16 +84,18 @@ object Utility {
     }
 
     fun getSubmitOnClick(
+        context: Context,
         puzzle: List<PuzzleLetter>,
         ids: List<Int>,
-        onInvalidWord: () -> Unit,
-        onComplete: () -> Unit,
-        activate: (List<Int>) -> Unit
+        activate: (List<Int>) -> List<Int>
     ): () -> Unit {
         return onClick@{
             if (ids.isEmpty()) return@onClick
             if (checkCompleted(ids)) return@onClick
             val lastId = ids.last()
+            getUsageLeft(puzzle[lastId], ids)?.let {
+                if (it == 0) return@onClick
+            }
             val startOfMostRecentIdSequence = ids
                 .lastIndexOf(Constants.SUBMIT)
                 .let {
@@ -103,13 +106,13 @@ object Utility {
                 .dropWhile { it in Constants.INDICATORS }
             if (mostRecentIdSequence.size < 3) return@onClick
             if (getSpelledWord(puzzle, mostRecentIdSequence) !in Dictionary.words()) {
-                onInvalidWord()
+                Toast.makeText(context, "Not a word.", Toast.LENGTH_SHORT).show()
                 return@onClick
             }
             if (checkCanComplete(puzzle, ids)) {
-                activate(listOf(Constants.COMPLETE))
-                calculateScore(puzzle, ids)
-                onComplete()
+                val updatedIds = activate(listOf(Constants.COMPLETE))
+                calculateScore(puzzle, updatedIds)
+                Toast.makeText(context, "You did it!", Toast.LENGTH_SHORT).show()
             } else {
                 activate(listOf(Constants.SUBMIT, lastId))
             }
@@ -124,9 +127,7 @@ object Utility {
         puzzle: List<PuzzleLetter>,
         ids: List<Int>
     ) {
-        val amountOfWords = ids.count {
-            it == Constants.SUBMIT
-        } + 1
+        val amountOfWords = ids.count { it in Constants.INDICATORS}
         var score = when (amountOfWords) {
             1 -> 100
             2 -> 80

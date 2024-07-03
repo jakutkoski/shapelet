@@ -1,6 +1,6 @@
 TODO:
 
-- handle double deduction when usageLimit letter is at end of word
+- function to decode board
 - implement rest of board types
 - decide how to do hints
 - explore some UI improvements

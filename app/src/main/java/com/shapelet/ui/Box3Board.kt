@@ -1,5 +1,6 @@
 package com.shapelet.ui
 
+import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,16 +30,17 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Box3Board(
-    puzzle: List<PuzzleLetter>,
-    onComplete: () -> Unit,
-    onInvalidWord: () -> Unit
+    context: Context, // is this bad? idk yet
+    puzzle: List<PuzzleLetter>
 ) {
     var activatedIds by rememberSaveable { mutableStateOf(listOf<Int>()) }
-    val activate: (List<Int>) -> Unit = { ids ->
+    val activate: (List<Int>) -> List<Int> = { ids ->
         activatedIds = activatedIds.toMutableList().apply { addAll(ids) }.toList()
+        activatedIds
     }
-    val delete: (Int) -> Unit = { amountToDrop ->
+    val delete: (Int) -> List<Int> = { amountToDrop ->
         activatedIds = activatedIds.dropLast(amountToDrop)
+        activatedIds
     }
 
     var nodeLength by remember { mutableFloatStateOf(0.0f) }
@@ -163,7 +165,7 @@ fun Box3Board(
                 Text(text = "DELETE")
             }
             Spacer(modifier = Modifier.size(30.dp))
-            Button(onClick = Utility.getSubmitOnClick(puzzle, activatedIds, onInvalidWord, onComplete, activate)) {
+            Button(onClick = Utility.getSubmitOnClick(context, puzzle, activatedIds, activate)) {
                 Text(text = "SUBMIT")
             }
         }

@@ -1,7 +1,6 @@
 package com.shapelet
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,12 +16,12 @@ class MainActivity : ComponentActivity() {
 
         Dictionary.initialize(applicationContext)
 
-        // TODO write function to interpret board encoding
         // box3|jxzrcaueloin|101000000000|000300000003|journalize|documenting events
 
         setContent {
             ShapeletTheme {
                 Box3Board(
+                    context = this@MainActivity,
                     puzzle = listOf(
                         PuzzleLetter(0, "j", setOf(0,1,2), true),
                         PuzzleLetter(1, "x", setOf(0,1,2)),
@@ -36,13 +35,7 @@ class MainActivity : ComponentActivity() {
                         PuzzleLetter(9, "o", setOf(9,10,11)),
                         PuzzleLetter(10, "i", setOf(9,10,11)),
                         PuzzleLetter(11, "n", setOf(9,10,11), false, 3)
-                    ),
-                    onComplete = {
-                        Toast.makeText(this@MainActivity, "You did it!", Toast.LENGTH_SHORT).show()
-                    },
-                    onInvalidWord = {
-                        Toast.makeText(this@MainActivity, "Not a word.", Toast.LENGTH_SHORT).show()
-                    }
+                    )
                 )
             }
         }
