@@ -30,8 +30,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Box3Board(
     puzzle: List<PuzzleLetter>,
-    comboPairs: List<Pair<Int, Int>>,
-    avoidPairs: List<Pair<Int, Int>>,
     onComplete: () -> Unit,
     onInvalidWord: () -> Unit
 ) {
@@ -97,8 +95,6 @@ fun Box3Board(
         Utility.drawSideLine(this, offsetOf(3), offsetOf(5), nodeLength)
         Utility.drawSideLine(this, offsetOf(6), offsetOf(8), nodeLength)
         Utility.drawSideLine(this, offsetOf(9), offsetOf(11), nodeLength)
-        Utility.drawComboLines(this, comboPairs, nodeLength, ::offsetOf)
-        Utility.drawAvoidLines(this, avoidPairs, nodeLength, ::offsetOf)
         Utility.drawActivationLines(this, activatedIds, nodeLength, ::offsetOf)
     }
 
@@ -167,7 +163,7 @@ fun Box3Board(
                 Text(text = "DELETE")
             }
             Spacer(modifier = Modifier.size(30.dp))
-            Button(onClick = Utility.getSubmitOnClick(puzzle, comboPairs, avoidPairs, activatedIds, onInvalidWord, onComplete, activate)) {
+            Button(onClick = Utility.getSubmitOnClick(puzzle, activatedIds, onInvalidWord, onComplete, activate)) {
                 Text(text = "SUBMIT")
             }
         }

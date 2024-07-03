@@ -18,13 +18,13 @@ class MainActivity : ComponentActivity() {
         Dictionary.initialize(applicationContext)
 
         // TODO write function to interpret board encoding
-        // box3|jxzrcaueloin|101000000000|000300000003|09|37|journalize|documenting events
+        // box3|jxzrcaueloin|101000000000|000300000003|journalize|documenting events
 
         setContent {
             ShapeletTheme {
                 Box3Board(
                     puzzle = listOf(
-                        PuzzleLetter(0, "j", setOf(0, 1, 2), true),
+                        PuzzleLetter(0, "j", setOf(0,1,2), true),
                         PuzzleLetter(1, "x", setOf(0,1,2)),
                         PuzzleLetter(2, "z", setOf(0,1,2), true),
                         PuzzleLetter(3, "r", setOf(3,4,5), false, 3),
@@ -37,8 +37,6 @@ class MainActivity : ComponentActivity() {
                         PuzzleLetter(10, "i", setOf(9,10,11)),
                         PuzzleLetter(11, "n", setOf(9,10,11), false, 3)
                     ),
-                    comboPairs = listOf(Pair(0, 9)),
-                    avoidPairs = listOf(Pair(3 ,7)),
                     onComplete = {
                         Toast.makeText(this@MainActivity, "You did it!", Toast.LENGTH_SHORT).show()
                     },

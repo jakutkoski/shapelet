@@ -24,13 +24,13 @@ board types:
 board encoding:
 
 ```
-type|letters|usageBonuses|usageLimits|comboPairs|avoidPairs|largeWord|largeWordHint
+type|letters|usageBonuses|usageLimits|largeWord|largeWordHint
 ```
 
 example of board encoding:
 
 ```
-box3|jxzrcaueloin|101000000000|000300000003|Z|37|journalize|documenting events
+box3|jxzrcaueloin|101000000000|000300000003|journalize|documenting events
 ```
 
 This encoding would create:
@@ -38,8 +38,6 @@ This encoding would create:
 - Top side = jxz. Left side = rca. Right side = uel. Bottom side = oin.
 - Letters j and z would grant bonus points every time they are used.
 - Letters r and n would be limited to 3 uses.
-- There would be no 2-letter sequence that would grant a bonus.
-- Avoiding the 2-letter sequence of r-to-e would grant a bonus.
 - The valid large word in mind by the puzzle-maker is journalize.
 - The hint for the large word is "documenting events".
 - After earning the first hint, a second hint can be earned that reveals the first letter of journalize.
