@@ -93,9 +93,6 @@ object Utility {
             if (ids.isEmpty()) return@onClick
             if (checkCompleted(ids)) return@onClick
             val lastId = ids.last()
-            getUsageLeft(puzzle[lastId], ids)?.let {
-                if (it == 0) return@onClick
-            }
             val startOfMostRecentIdSequence = ids
                 .lastIndexOf(Constants.SUBMIT)
                 .let {
@@ -111,9 +108,15 @@ object Utility {
             }
             if (checkCanComplete(puzzle, ids)) {
                 val updatedIds = activate(listOf(Constants.COMPLETE))
-                calculateScore(puzzle, updatedIds)
-                Toast.makeText(context, "You did it!", Toast.LENGTH_SHORT).show()
+                val score = calculateScore(puzzle, updatedIds)
+                Toast.makeText(context, "You did it! Score: $score", Toast.LENGTH_SHORT).show()
             } else {
+                getUsageLeft(puzzle[lastId], ids)?.let {
+                    if (it == 0) {
+                        Toast.makeText(context, "Out of uses for ${puzzle[lastId].letter}", Toast.LENGTH_SHORT).show()
+                        return@onClick
+                    }
+                }
                 activate(listOf(Constants.SUBMIT, lastId))
             }
         }
@@ -126,7 +129,7 @@ object Utility {
     fun calculateScore(
         puzzle: List<PuzzleLetter>,
         ids: List<Int>
-    ) {
+    ): Int {
         val amountOfWords = ids.count { it in Constants.INDICATORS}
         var score = when (amountOfWords) {
             1 -> 100
@@ -136,19 +139,15 @@ object Utility {
             5 -> 10
             6 -> 5
             7 -> 1
-            else -> {
-                println("score = 0")
-                return
-            }
+            else -> return 0
         }
         val amountOfUsageBonus = ids.count {
             if (it !in Constants.INDICATORS) {
                 puzzle[it].usageBonus
             } else false
         }
-        println("amountOfUsageBonus = $amountOfUsageBonus")
         score += 5 * amountOfUsageBonus
-        println("score = $score")
+        return score
     }
 
     fun drawSideLine(drawScope: DrawScope, start: Offset, end: Offset, nodeLength: Float) {
