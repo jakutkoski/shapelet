@@ -240,6 +240,11 @@ object Utility {
                 4,5,6,7 -> setOf(4,5,6,7)
                 else -> throw Exception("id $id is not valid for board type $boardType")
             }
+            "lane4" -> when (id) {
+                0,1,2,3,8,9,10,11 -> setOf(0,1,2,3,8,9,10,11)
+                4,5,6,7 -> setOf(4,5,6,7)
+                else -> throw Exception("id $id is not valid for board type $boardType")
+            }
             else -> throw Exception("board type $boardType does not exist")
         }
     }

@@ -1,6 +1,7 @@
 TODO:
 
-- implement rest of board types
+- explore refactor
+- puzzle generation and solving
 - explore some UI improvements
 - explore optimizations - hashmap dictionary or binary search, line drawing cache, etc.
 - abstractions - ViewModel, data layer, dependency injection
@@ -9,16 +10,6 @@ TODO:
 - implement hints
 - create menu, settings, etc.
 - create build your own puzzle?
-
-board types:
-- box2
-- box3
-- box4
-- cup3
-- cup4
-- mirror4
-- lane3
-- lane4
 
 board encoding:
 
