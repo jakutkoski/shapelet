@@ -1,6 +1,6 @@
 TODO:
 
-- explore refactor
+- Composables for Spelled and BoardButtons with consistent height across boards
 - puzzle generation and solving
 - explore some UI improvements
 - explore optimizations - hashmap dictionary or binary search, line drawing cache, etc.
@@ -14,13 +14,13 @@ TODO:
 board encoding:
 
 ```
-type|letters|usageBonuses|usageLimits|largeWord|largeWordHint
+type|letters|usageBonuses|usageLimits|largeWord
 ```
 
 example of board encoding:
 
 ```
-box3|jxzrcaueloin|101000000000|000300000003|journalize|documenting events
+box3|jxzrcaueloin|101000000000|000300000003|journalize
 ```
 
 This encoding would create:
@@ -29,6 +29,5 @@ This encoding would create:
 - Letters j and z would grant bonus points every time they are used.
 - Letters r and n would be limited to 3 uses.
 - The valid large word in mind by the puzzle-maker is journalize.
-- The hint for the large word is "documenting events".
-- After earning the first hint, a second hint can be earned that reveals the first letter of journalize.
-- After earning the second hint, a third hint can be earned that reveals the second letter of journalize.
+- First hint = the fist letter of journalize.
+- Second hint = the last letter of journalize.

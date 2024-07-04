@@ -89,7 +89,7 @@ fun Box3Board(
         9 -> node9offset
         10 -> node10offset
         11 -> node11offset
-        else -> throw Exception("cannot get centered node offset of a node ID that does not exist")
+        else -> throw GetOffsetException(id)
     }
 
     Canvas(modifier = Modifier.fillMaxSize()) {

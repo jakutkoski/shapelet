@@ -138,7 +138,10 @@ object Utility {
             4 -> 20
             5 -> 10
             6 -> 5
-            7 -> 1
+            7 -> 4
+            8 -> 3
+            9 -> 2
+            10 -> 1
             else -> return 0
         }
         val amountOfUsageBonus = ids.count {
@@ -199,7 +202,6 @@ object Utility {
         val bonuses = parts[2].map { it.toString().toInt() }
         val limits = parts[3].map { it.toString().toInt() }
         val largeWord = parts[4]
-        val largeWordHint = parts[5]
         val puzzleLetters = letters.mapIndexed { index, letter ->
             PuzzleLetter(
                 id = index,
@@ -215,8 +217,7 @@ object Utility {
         return Board(
             type = type,
             puzzle = puzzleLetters,
-            largeWord = largeWord,
-            largeWordHint = largeWordHint
+            largeWord = largeWord
         )
     }
 
@@ -227,25 +228,14 @@ object Utility {
                 3,4,5 -> setOf(3,4,5)
                 6,7,8 -> setOf(6,7,8)
                 9,10,11 -> setOf(9,10,11)
-                else -> throw Exception("id $id is not valid for board type $boardType")
-            }
-            "cup3" -> when (id) {
-                0,1,2 -> setOf(0,1,2)
-                3,4,5 -> setOf(3,4,5)
-                6,7,8 -> setOf(6,7,8)
-                else -> throw Exception("id $id is not valid for board type $boardType")
-            }
-            "mirror4" -> when (id) {
-                0,1,2,3 -> setOf(0,1,2,3)
-                4,5,6,7 -> setOf(4,5,6,7)
-                else -> throw Exception("id $id is not valid for board type $boardType")
+                else -> throw InvalidIdException(id, boardType)
             }
             "lane4" -> when (id) {
                 0,1,2,3,8,9,10,11 -> setOf(0,1,2,3,8,9,10,11)
                 4,5,6,7 -> setOf(4,5,6,7)
-                else -> throw Exception("id $id is not valid for board type $boardType")
+                else -> throw InvalidIdException(id, boardType)
             }
-            else -> throw Exception("board type $boardType does not exist")
+            else -> throw BoardTypeException(boardType)
         }
     }
 }
@@ -290,6 +280,11 @@ data class PuzzleLetter(
 data class Board(
     val type: String,
     val puzzle: List<PuzzleLetter>,
-    val largeWord: String,
-    val largeWordHint: String
+    val largeWord: String
 )
+
+class GetOffsetException(id: Int): Exception("cannot get offset of node $id since it does not exist")
+
+class BoardTypeException(type: String): Exception("board type $type does not exist")
+
+class InvalidIdException(id: Int, boardType: String): Exception("id $id is not valid for board type $boardType")
