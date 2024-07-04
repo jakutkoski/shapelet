@@ -235,6 +235,11 @@ object Utility {
                 6,7,8 -> setOf(6,7,8)
                 else -> throw Exception("id $id is not valid for board type $boardType")
             }
+            "mirror4" -> when (id) {
+                0,1,2,3 -> setOf(0,1,2,3)
+                4,5,6,7 -> setOf(4,5,6,7)
+                else -> throw Exception("id $id is not valid for board type $boardType")
+            }
             else -> throw Exception("board type $boardType does not exist")
         }
     }
