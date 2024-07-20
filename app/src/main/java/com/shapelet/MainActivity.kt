@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         Dictionary.initialize(applicationContext)
 
 //        val boardEncoding = "box3|jxzrcaueloin|101000000000|000300000003|journalize"
-        val boardEncoding = "lane4|bpernuamsylt|000000000100|000000002002|idk"
+        val boardEncoding = "lane4|bpernuamsylt|000000002002000100|000000002002|idk"
         val board = Utility.decode(boardEncoding)
 
         setContent {

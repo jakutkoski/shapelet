@@ -1,6 +1,5 @@
 TODO:
 
-- Composables for Spelled and BoardButtons with consistent height across boards
 - puzzle generation and solving
 - explore some UI improvements
 - explore optimizations - hashmap dictionary or binary search, line drawing cache, etc.
@@ -9,7 +8,6 @@ TODO:
 - create point system and account memory
 - implement hints
 - create menu, settings, etc.
-- create build your own puzzle?
 
 board encoding:
 

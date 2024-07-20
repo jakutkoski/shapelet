@@ -10,10 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -101,73 +98,60 @@ fun Box3Board(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Row(modifier = Modifier
+        SubmittedLetters(puzzle, activatedIds)
+
+        Column(modifier = Modifier
             .fillMaxWidth()
-            .requiredHeight(220.dp)
-            .padding(start = 10.dp, top = 100.dp, end = 10.dp),
-            horizontalArrangement = Arrangement.Center
+            .fillMaxHeight(0.6f)
         ) {
-            Text(text = Utility.getSpelledActivated(puzzle, activatedIds), modifier = Modifier.fillMaxHeight())
-        }
-        Spacer(modifier = Modifier.size(10.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 30.dp, end = 30.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Node(puzzle[0], activatedIds, onClickOf(0), node0onGloballyPositioned)
-            Node(puzzle[1], activatedIds, onClickOf(1), node1onGloballyPositioned)
-            Node(puzzle[2], activatedIds, onClickOf(2), node2onGloballyPositioned)
-        }
-        Spacer(modifier = Modifier.size(30.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Node(puzzle[3], activatedIds, onClickOf(3), node3onGloballyPositioned)
-            Node(puzzle[6], activatedIds, onClickOf(6), node6onGloballyPositioned)
-        }
-        Spacer(modifier = Modifier.size(30.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Node(puzzle[4], activatedIds, onClickOf(4), node4onGloballyPositioned)
-            Node(puzzle[7], activatedIds, onClickOf(7), node7onGloballyPositioned)
-        }
-        Spacer(modifier = Modifier.size(30.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Node(puzzle[5], activatedIds, onClickOf(5), node5onGloballyPositioned)
-            Node(puzzle[8], activatedIds, onClickOf(8), node8onGloballyPositioned)
-        }
-        Spacer(modifier = Modifier.size(30.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 30.dp, end = 30.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Node(puzzle[9], activatedIds, onClickOf(9), node9onGloballyPositioned)
-            Node(puzzle[10], activatedIds, onClickOf(10), node10onGloballyPositioned)
-            Node(puzzle[11], activatedIds, onClickOf(11), node11onGloballyPositioned)
-        }
-        Spacer(modifier = Modifier.size(80.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(onClick = Utility.getDeleteOnClick(activatedIds, delete)) {
-                Text(text = "DELETE")
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 30.dp, end = 30.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Node(puzzle[0], activatedIds, onClickOf(0), node0onGloballyPositioned)
+                Node(puzzle[1], activatedIds, onClickOf(1), node1onGloballyPositioned)
+                Node(puzzle[2], activatedIds, onClickOf(2), node2onGloballyPositioned)
             }
             Spacer(modifier = Modifier.size(30.dp))
-            Button(onClick = Utility.getSubmitOnClick(context, puzzle, activatedIds, activate)) {
-                Text(text = "SUBMIT")
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Node(puzzle[3], activatedIds, onClickOf(3), node3onGloballyPositioned)
+                Node(puzzle[6], activatedIds, onClickOf(6), node6onGloballyPositioned)
+            }
+            Spacer(modifier = Modifier.size(30.dp))
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Node(puzzle[4], activatedIds, onClickOf(4), node4onGloballyPositioned)
+                Node(puzzle[7], activatedIds, onClickOf(7), node7onGloballyPositioned)
+            }
+            Spacer(modifier = Modifier.size(30.dp))
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Node(puzzle[5], activatedIds, onClickOf(5), node5onGloballyPositioned)
+                Node(puzzle[8], activatedIds, onClickOf(8), node8onGloballyPositioned)
+            }
+            Spacer(modifier = Modifier.size(30.dp))
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 30.dp, end = 30.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Node(puzzle[9], activatedIds, onClickOf(9), node9onGloballyPositioned)
+                Node(puzzle[10], activatedIds, onClickOf(10), node10onGloballyPositioned)
+                Node(puzzle[11], activatedIds, onClickOf(11), node11onGloballyPositioned)
             }
         }
+
+        BoardButtons(context, puzzle, activatedIds, activate, delete)
     }
 }
