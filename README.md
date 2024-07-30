@@ -1,6 +1,6 @@
 TODO:
 
-- puzzle generation and solving
+- save and curate generated puzzles, load 100 puzzles onto phone
 - explore some UI improvements
 - explore optimizations - hashmap dictionary or binary search, line drawing cache, etc.
 - abstractions - ViewModel, data layer, dependency injection

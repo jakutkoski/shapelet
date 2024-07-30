@@ -238,6 +238,45 @@ object Utility {
             else -> throw BoardTypeException(boardType)
         }
     }
+
+    fun works(puzzleSequence: List<Char>, wordSequence: String): Boolean {
+        // this assumes all chars in wordSequence are part of puzzleSequence
+        var currentSide = puzzleSequence.indexOf(wordSequence[0]) / 3
+        wordSequence.drop(1).forEach {
+            val nextSide = puzzleSequence.indexOf(it) / 3
+            if (nextSide == currentSide) return false
+            currentSide = nextSide
+        }
+        return true
+    }
+
+    fun generatePuzzle(uniqueLetters: List<Char>, wordSequence: String, maxAttempts: Int): List<Char> {
+        var attempts = 0
+        while (attempts < maxAttempts) {
+            val shuffled = uniqueLetters.shuffled()
+            if (works(shuffled, wordSequence)) return shuffled
+            attempts++
+        }
+        return emptyList()
+    }
+
+    fun generatePuzzlesFromDictionary(start: Int, end: Int, maxAttemptsPerWordPair: Int): List<Triple<String, String, String>> {
+        val result = mutableListOf<Triple<String, String, String>>()
+        val allWords = Dictionary.words()
+        val word1options = allWords.subList(start, end)
+        for (word1 in word1options) {
+            for (word2 in allWords) {
+                if (word1.last() != word2.first()) continue
+                val wordSequence = word1.dropLast(1) + word2
+                val uniqueLetters = wordSequence.groupBy { it }.keys.toList()
+                if (uniqueLetters.size != 12) continue
+                val puzzle = generatePuzzle(uniqueLetters, wordSequence, maxAttemptsPerWordPair)
+                if (puzzle.size != 12) continue
+                result.add(Triple(puzzle.joinToString(""), word1, word2))
+            }
+        }
+        return result
+    }
 }
 
 object Dictionary {
