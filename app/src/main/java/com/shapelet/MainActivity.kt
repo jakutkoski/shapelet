@@ -17,11 +17,8 @@ class MainActivity : ComponentActivity() {
 
         Dictionary.initialize(applicationContext)
 
-        val boardEncoding = "box3|utelgshiomnr|101000000000|000300000003|journalize"
-//        val boardEncoding = "lane4|bpernuamsylt|000000002002000100|000000002002|idk"
+        val boardEncoding = "box3|ebfnaitucvld|000000000100|000020000000|abdicate|eventful"
         val board = Utility.decode(boardEncoding)
-
-//        println(Utility.generatePuzzlesFromDictionary(53000, 53010, 500))
 
         setContent {
             ShapeletTheme {

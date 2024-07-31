@@ -1,31 +1,27 @@
 TODO:
 
-- save and curate generated puzzles, load 100 puzzles onto phone
-- explore some UI improvements
-- explore optimizations - hashmap dictionary or binary search, line drawing cache, etc.
-- abstractions - ViewModel, data layer, dependency injection
-- explore more UI improvements
-- create point system and account memory
-- implement hints
-- create menu, settings, etc.
+- UI improvements
+- optimizations - hashmap or binary search for dictionary, line drawing cache, etc.
+- abstractions - ViewModel, data layer, dependency injection, etc.
+- point system and account memory
+- special word hints
+- menu, settings, etc.
 
 board encoding:
 
 ```
-type|letters|usageBonuses|usageLimits|largeWord
+type|letters|usageBonuses|usageLimits|specialWord1|specialWord2
 ```
 
 example of board encoding:
 
 ```
-box3|jxzrcaueloin|101000000000|000300000003|journalize
+box3|ebfnaitucvld|000000000100|000020000000|abdicate|eventful
 ```
 
 This encoding would create:
 - A square with 3 letters per side.
-- Top side = jxz. Left side = rca. Right side = uel. Bottom side = oin.
-- Letters j and z would grant bonus points every time they are used.
-- Letters r and n would be limited to 3 uses.
-- The valid large word in mind by the puzzle-maker is journalize.
-- First hint = the fist letter of journalize.
-- Second hint = the last letter of journalize.
+- Top side = ebf. Left side = nai. Right side = tuc. Bottom side = vld.
+- Letter v would grant bonus points every time it is used.
+- Letter a would be limited to 2 uses.
+- This puzzle can be solved with word sequence abdicate - eventful.
