@@ -36,17 +36,6 @@ object Utility {
         return ids.lastIndexOf(Constants.COMPLETE) != -1
     }
 
-    fun getUsageLeft(puzzleLetter: PuzzleLetter, ids: List<Int>): Int? {
-        return puzzleLetter.usageLimit?.let { usageLimit ->
-            val usageCount = ids.count {
-                it == puzzleLetter.id
-            }
-            val result = usageLimit - usageCount
-            if (result < 0) throw Exception("usageLimit was somehow exceeded")
-            result
-        }
-    }
-
     fun getNodeOnClick(
         puzzle: List<PuzzleLetter>,
         id: Int,
@@ -57,9 +46,6 @@ object Utility {
             if (ids.isNotEmpty()) {
                 if (checkCompleted(ids)) return@onClick
                 if (ids.last() in puzzle[id].incompatibleIds) return@onClick
-                getUsageLeft(puzzle[id], ids)?.let {
-                    if (it == 0) return@onClick
-                }
             }
             activate(listOf(id))
         }
@@ -108,15 +94,9 @@ object Utility {
             }
             if (checkCanComplete(puzzle, ids)) {
                 val updatedIds = activate(listOf(Constants.COMPLETE))
-                val score = calculateScore(puzzle, updatedIds)
+                val score = calculateScore(updatedIds)
                 Toast.makeText(context, "You did it! Score: $score", Toast.LENGTH_SHORT).show()
             } else {
-                getUsageLeft(puzzle[lastId], ids)?.let {
-                    if (it == 0) {
-                        Toast.makeText(context, "Out of uses for ${puzzle[lastId].letter}", Toast.LENGTH_SHORT).show()
-                        return@onClick
-                    }
-                }
                 activate(listOf(Constants.SUBMIT, lastId))
             }
         }
@@ -127,11 +107,10 @@ object Utility {
     }
 
     fun calculateScore(
-        puzzle: List<PuzzleLetter>,
         ids: List<Int>
     ): Int {
-        val amountOfWords = ids.count { it in Constants.INDICATORS}
-        var score = when (amountOfWords) {
+        val amountOfWords = ids.count { it in Constants.INDICATORS }
+        return when (amountOfWords) {
             1 -> 100
             2 -> 80
             3 -> 40
@@ -142,15 +121,8 @@ object Utility {
             8 -> 3
             9 -> 2
             10 -> 1
-            else -> return 0
+            else -> 0
         }
-        val amountOfUsageBonus = ids.count {
-            if (it !in Constants.INDICATORS) {
-                puzzle[it].usageBonus
-            } else false
-        }
-        score += 5 * amountOfUsageBonus
-        return score
     }
 
     fun drawSideLine(drawScope: DrawScope, start: Offset, end: Offset, nodeLength: Float) {
@@ -199,27 +171,18 @@ object Utility {
         val parts = boardEncoding.split("|")
         val type = parts[0]
         val letters = parts[1].map { it.toString() }
-        val bonuses = parts[2].map { it.toString().toInt() }
-        val limits = parts[3].map { it.toString().toInt() }
-        val specialWord1 = parts[4]
-        val specialWord2 = parts[5]
+        val workingWords = parts[2].split(",")
         val puzzleLetters = letters.mapIndexed { index, letter ->
             PuzzleLetter(
                 id = index,
                 letter = letter,
-                incompatibleIds = getIncompatibleIds(type, index),
-                usageBonus = bonuses[index] == 1,
-                usageLimit = limits[index].let {
-                    if (it == 0) null
-                    else it
-                }
+                incompatibleIds = getIncompatibleIds(type, index)
             )
         }
         return Board(
             type = type,
             puzzle = puzzleLetters,
-            specialWord1 = specialWord1,
-            specialWord2 = specialWord2
+            workingWords = workingWords
         )
     }
 
@@ -313,16 +276,13 @@ object Constants {
 data class PuzzleLetter(
     val id: Int,
     val letter: String,
-    val incompatibleIds: Set<Int>,
-    val usageBonus: Boolean = false,
-    val usageLimit: Int? = null
+    val incompatibleIds: Set<Int>
 )
 
 data class Board(
     val type: String,
     val puzzle: List<PuzzleLetter>,
-    val specialWord1: String,
-    val specialWord2: String
+    val workingWords: List<String>
 )
 
 class GetOffsetException(id: Int): Exception("cannot get offset of node $id since it does not exist")

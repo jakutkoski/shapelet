@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
 
         Dictionary.initialize(applicationContext)
 
-        val boardEncoding = "box3|ebfnaitucvld|000000000100|000020000000|abdicate|eventful"
+        val boardEncoding = "box3|ebfnaitucvld|abdicate,eventful"
         val board = Utility.decode(boardEncoding)
 
         setContent {

@@ -25,10 +25,6 @@ fun Node(
     val activated = puzzleLetter.id in activatedIds
     val lastActivated = activatedIds.isNotEmpty() && activatedIds.last() == puzzleLetter.id
 
-    val text = Utility.getUsageLeft(puzzleLetter, activatedIds)?.let {
-        "${puzzleLetter.letter} $it"
-    } ?: puzzleLetter.letter
-
     val border = when {
         lastActivated -> BorderStroke(3.dp, Constants.ACTIVATION_GREEN)
         activated -> BorderStroke(1.dp, Constants.ACTIVATION_GREEN)
@@ -43,11 +39,11 @@ fun Node(
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White,
-            contentColor = if (puzzleLetter.usageBonus) Color.Blue else Color.Black
+            contentColor = Color.Black
         ),
         onClick = onClick,
         border = border
     ) {
-        Text(text = text)
+        Text(text = puzzleLetter.letter)
     }
 }
