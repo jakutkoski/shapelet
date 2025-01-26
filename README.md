@@ -1,10 +1,12 @@
 TODO:
 
+- generate all puzzles
 - UI improvements
 - optimizations - hashmap or binary search for dictionary, line drawing cache, etc.
-- abstractions - ViewModel, data layer, dependency injection, etc.
+- abstractions (maybe) - ViewModel, data layer, dependency injection, etc.
 - account memory for best solve of each puzzle
-- menu, settings, etc.
+- rating system (5 through 1 ribbons, letter count as well)
+- menu: tab for filterable list of all puzzles, tab for "settings" and stats
 
 board encoding:
 
