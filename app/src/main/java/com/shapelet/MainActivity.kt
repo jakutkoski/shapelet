@@ -17,6 +17,14 @@ class MainActivity : ComponentActivity() {
 
         Dictionary.initialize(applicationContext)
 
+        // TODO
+        // generates 200 per second
+        // do i need a better dictionary?
+        // how to store generated puzzles?
+
+        val result = Utility.generatePuzzlesFromDictionary(0, 10000, 100)
+        println("result ${result.size}")
+
         val boardEncoding = "box3|ebfnaitucvld|abdicate,eventful"
         val board = Utility.decode(boardEncoding)
 

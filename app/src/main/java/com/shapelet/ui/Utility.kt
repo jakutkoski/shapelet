@@ -230,7 +230,8 @@ object Utility {
         val allWords = Dictionary.words()
         val word1options = allWords.subList(start, end)
         for (word1 in word1options) {
-            for (word2 in allWords) {
+            for (i in 0..allWords.size) {
+                val word2 = allWords.random()
                 if (word1.last() != word2.first()) continue
                 val wordSequence = word1.dropLast(1) + word2
                 val uniqueLetters = wordSequence.groupBy { it }.keys.toList()
@@ -238,6 +239,7 @@ object Utility {
                 val puzzle = generatePuzzle(uniqueLetters, wordSequence, maxAttemptsPerWordPair)
                 if (puzzle.size != 12) continue
                 result.add(Triple(puzzle.joinToString(""), word1, word2))
+                break
             }
         }
         return result
