@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.shapelet.ui.Box3Board
-import com.shapelet.ui.Dictionary
 import com.shapelet.ui.Lane4Board
 import com.shapelet.ui.Utility
+import com.shapelet.ui.Words
 import com.shapelet.ui.theme.ShapeletTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,15 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        Dictionary.initialize(applicationContext)
-
-        // TODO
-        // generates 200 per second
-        // do i need a better dictionary?
-        // how to store generated puzzles?
-
-        val result = Utility.generatePuzzlesFromDictionary(0, 10000, 100)
-        println("result ${result.size}")
+        Words.initialize(applicationContext)
 
         val boardEncoding = "box3|ebfnaitucvld|abdicate,eventful"
         val board = Utility.decode(boardEncoding)

@@ -88,7 +88,7 @@ object Utility {
                 .subList(startOfMostRecentIdSequence, ids.size)
                 .dropWhile { it in Constants.INDICATORS }
             if (mostRecentIdSequence.size < 3) return@onClick
-            if (getSpelledWord(puzzle, mostRecentIdSequence) !in Dictionary.words()) {
+            if (getSpelledWord(puzzle, mostRecentIdSequence) !in Words.allWords) {
                 Toast.makeText(context, "Not a word.", Toast.LENGTH_SHORT).show()
                 return@onClick
             }
@@ -203,65 +203,28 @@ object Utility {
             else -> throw BoardTypeException(boardType)
         }
     }
-
-    fun works(puzzleSequence: List<Char>, wordSequence: String): Boolean {
-        // this assumes all chars in wordSequence are part of puzzleSequence
-        var currentSide = puzzleSequence.indexOf(wordSequence[0]) / 3
-        wordSequence.drop(1).forEach {
-            val nextSide = puzzleSequence.indexOf(it) / 3
-            if (nextSide == currentSide) return false
-            currentSide = nextSide
-        }
-        return true
-    }
-
-    fun generatePuzzle(uniqueLetters: List<Char>, wordSequence: String, maxAttempts: Int): List<Char> {
-        var attempts = 0
-        while (attempts < maxAttempts) {
-            val shuffled = uniqueLetters.shuffled()
-            if (works(shuffled, wordSequence)) return shuffled
-            attempts++
-        }
-        return emptyList()
-    }
-
-    fun generatePuzzlesFromDictionary(start: Int, end: Int, maxAttemptsPerWordPair: Int): List<Triple<String, String, String>> {
-        val result = mutableListOf<Triple<String, String, String>>()
-        val allWords = Dictionary.words()
-        val word1options = allWords.subList(start, end)
-        for (word1 in word1options) {
-            for (i in 0..allWords.size) {
-                val word2 = allWords.random()
-                if (word1.last() != word2.first()) continue
-                val wordSequence = word1.dropLast(1) + word2
-                val uniqueLetters = wordSequence.groupBy { it }.keys.toList()
-                if (uniqueLetters.size != 12) continue
-                val puzzle = generatePuzzle(uniqueLetters, wordSequence, maxAttemptsPerWordPair)
-                if (puzzle.size != 12) continue
-                result.add(Triple(puzzle.joinToString(""), word1, word2))
-                break
-            }
-        }
-        return result
-    }
 }
 
-object Dictionary {
-    private val _words = mutableListOf<String>()
+object Words {
     private var initialized = false
-
-    fun words() = _words.toList()
+    lateinit var allWords: List<String> private set
 
     fun initialize(context: Context) {
         if (initialized) return
         initialized = true
-        val inputStream = context.assets.open("words.txt")
+        allWords = process(context, "all_words.txt")
+    }
+
+    private fun process(context: Context, fileName: String): List<String> {
+        val processed = mutableListOf<String>()
+        val inputStream = context.assets.open(fileName)
         val reader = BufferedReader(InputStreamReader(inputStream))
         var line = reader.readLine()
         while (line != null) {
-            _words.add(line)
+            processed.add(line)
             line = reader.readLine()
         }
+        return processed.toList()
     }
 }
 
