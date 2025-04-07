@@ -2,35 +2,43 @@ package com.shapelet
 
 import java.io.File
 
-// TODO can this file be moved to root of repo?
+// TODO for word lists
+// refine profane words list - which words should users be able to submit?
+// run script to remove profane words from all words
+// spot check new all words file
+// make sure every word in seed_words also exists in all_words
+
+// TODO for generating puzzles
+// run script
+// deduplicate based on actual puzzle letter sequence, not seed words
+// shuffle before writing to text file
+// add ID to puzzles?
+
+const val allWordsFileName = "app/src/main/assets/all_words.txt"
+const val seedWordsFileName = "words/seed_words.txt"
+const val profaneWordsFileName = "words/profane_words.txt"
 
 fun main(args: Array<String>) {
-//    clean("words/seed_words.txt", "seed_words_clean.txt")
-//    clean("app/src/main/assets/all_words.txt", "all_words_clean.txt")
-
-    generatePuzzles(getWords("words/seed_words.txt"), 0, 100)
-    // shuffle before writing to text file
-    // de-dupe before writing to text file
-    // add ID to puzzles?
+    val words = getWords(profaneWordsFileName)
+    val result = words.filter { word ->
+        var lastLetter = word[0]
+        for (letter in word.drop(1)) {
+            if (lastLetter == letter) return@filter false
+            lastLetter = letter
+        }
+        return@filter true
+    }
+    write(result, "profane_words_new.txt")
 }
 
 fun getWords(fileName: String): List<String> {
-    return File(fileName).readLines().map { it.trim() }
+    // this trims whitespace and deduplicates
+    return File(fileName).readLines().map { it.trim() }.distinct()
 }
 
-fun clean(sourceFileName: String, destinationFileName: String) {
-    val sourceWords = getWords(sourceFileName)
-    val profaneWords = getWords("words/profane_words.txt")
-
-    val result = sourceWords.filter {
-        it.length >= 3 && it !in profaneWords
-    }
-
-    println("$sourceFileName : original word count : ${sourceWords.size}")
-    println("$destinationFileName : final word count: ${result.size}")
-
+fun write(words: List<String>, destinationFileName: String) {
     File(destinationFileName).printWriter().use { out ->
-        result.forEach {
+        words.forEach {
             out.println(it)
         }
     }
