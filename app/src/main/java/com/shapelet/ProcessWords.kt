@@ -2,38 +2,27 @@ package com.shapelet
 
 import java.io.File
 
-// TODO for word lists
-// refine profane words list - which words should users be able to submit?
-// run script to remove profane words from all words
-// spot check new all words file
+// TODO
 // make sure every word in seed_words also exists in all_words
 
 // TODO for generating puzzles
 // run script
-// deduplicate based on actual puzzle letter sequence, not seed words
+// deduplicate based on actual puzzle letter sequence, not solution words - actually, maybe not needed?
 // shuffle before writing to text file
 // add ID to puzzles?
 
 const val allWordsFileName = "app/src/main/assets/all_words.txt"
 const val seedWordsFileName = "words/seed_words.txt"
-const val profaneWordsFileName = "words/profane_words.txt"
+const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
-    val words = getWords(profaneWordsFileName)
-    val result = words.filter { word ->
-        var lastLetter = word[0]
-        for (letter in word.drop(1)) {
-            if (lastLetter == letter) return@filter false
-            lastLetter = letter
-        }
-        return@filter true
-    }
-    write(result, "profane_words_new.txt")
+    val words = getWords(offensiveWordsFileName)
+    val result = words.sorted()
+    write(result, "offensive_words_new.txt")
 }
 
 fun getWords(fileName: String): List<String> {
-    // this trims whitespace and deduplicates
-    return File(fileName).readLines().map { it.trim() }.distinct()
+    return File(fileName).readLines().map { it.trim() }
 }
 
 fun write(words: List<String>, destinationFileName: String) {
