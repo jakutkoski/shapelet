@@ -2,9 +2,6 @@ package com.shapelet
 
 import java.io.File
 
-// TODO
-// make sure every word in seed_words also exists in all_words
-
 // TODO for generating puzzles
 // run script
 // deduplicate based on actual puzzle letter sequence, not solution words - actually, maybe not needed?
@@ -16,9 +13,12 @@ const val seedWordsFileName = "words/seed_words.txt"
 const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
-    val words = getWords(offensiveWordsFileName)
-    val result = words.sorted()
-    write(result, "offensive_words_new.txt")
+    val words = getWords(seedWordsFileName)
+    val allWords = getWords(allWordsFileName)
+    val result = words.filter {
+        it in allWords
+    }
+    write(result, "result.txt")
 }
 
 fun getWords(fileName: String): List<String> {

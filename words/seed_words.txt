@@ -1133,8 +1133,6 @@ bask
 basket
 baskets
 basking
-bastard
-bastards
 baste
 bat
 batch
@@ -1697,8 +1695,6 @@ boy
 boyfriend
 boyfriends
 boys
-bozo
-bozos
 bra
 brace
 bracelet
@@ -2566,7 +2562,6 @@ chickened
 chickening
 chickenpox
 chickens
-chickenshit
 chicks
 chico
 chief
@@ -2687,7 +2682,6 @@ circulate
 circulated
 circulation
 circulatory
-circumcision
 circumference
 circumstance
 circumstances
@@ -3740,7 +3734,6 @@ crept
 crescent
 crest
 crested
-cretins
 crew
 crewman
 crews
@@ -10908,7 +10901,6 @@ moneybags
 moneymaker
 moneys
 monger
-mongoloid
 mongrel
 moniker
 monitor
@@ -13376,7 +13368,6 @@ psychotherapy
 psychotic
 psychotics
 pub
-pubic
 public
 publication
 publications
@@ -13873,7 +13864,6 @@ recruiting
 recruits
 rectangle
 rectify
-rectory
 recuperate
 recuperating
 recuse
@@ -19230,7 +19220,6 @@ wink
 winking
 winkle
 winks
-winos
 wins
 winter
 winters
