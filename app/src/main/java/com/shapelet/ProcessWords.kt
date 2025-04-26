@@ -2,11 +2,13 @@ package com.shapelet
 
 import java.io.File
 
-// TODO for generating puzzles
-// run script
-// deduplicate based on actual puzzle letter sequence, not solution words - actually, maybe not needed?
-// shuffle before writing to text file
-// add ID to puzzles?
+// TODO
+// decide what must be unique by puzzle
+// decide whether to add Long ID
+// decide if board encoding needs to change
+// think about how player solutions will be saved
+// decide if generated puzzles should be shuffled before ID added and saved to file
+// how many puzzles do I need for testing? 50 box3, 50 lane4
 
 const val allWordsFileName = "app/src/main/assets/all_words.txt"
 const val seedWordsFileName = "words/seed_words.txt"

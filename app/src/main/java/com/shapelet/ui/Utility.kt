@@ -212,19 +212,15 @@ object Words {
     fun initialize(context: Context) {
         if (initialized) return
         initialized = true
-        allWords = process(context, "all_words.txt")
-    }
-
-    private fun process(context: Context, fileName: String): List<String> {
         val processed = mutableListOf<String>()
-        val inputStream = context.assets.open(fileName)
+        val inputStream = context.assets.open("all_words.txt")
         val reader = BufferedReader(InputStreamReader(inputStream))
         var line = reader.readLine()
         while (line != null) {
             processed.add(line)
             line = reader.readLine()
         }
-        return processed.toList()
+        allWords = processed.toList()
     }
 }
 
