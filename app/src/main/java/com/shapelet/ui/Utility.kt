@@ -171,7 +171,7 @@ object Utility {
         val parts = boardEncoding.split("|")
         val type = parts[0]
         val letters = parts[1].map { it.toString() }
-        val workingWords = parts[2].split(",")
+        val specialWords = parts[2].split(",")
         val puzzleLetters = letters.mapIndexed { index, letter ->
             PuzzleLetter(
                 id = index,
@@ -182,7 +182,7 @@ object Utility {
         return Board(
             type = type,
             puzzle = puzzleLetters,
-            workingWords = workingWords
+            specialWords = specialWords
         )
     }
 
@@ -243,7 +243,7 @@ data class PuzzleLetter(
 data class Board(
     val type: String,
     val puzzle: List<PuzzleLetter>,
-    val workingWords: List<String>
+    val specialWords: List<String>
 )
 
 class GetOffsetException(id: Int): Exception("cannot get offset of node $id since it does not exist")
