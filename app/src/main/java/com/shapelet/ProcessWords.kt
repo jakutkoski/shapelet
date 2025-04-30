@@ -8,10 +8,10 @@ const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
     val seedWords = getWords(seedWordsFileName)
-    val box3results = Box3Generator.generatePuzzles(seedWords.shuffled(), 0, seedWords.size - 1)
-    val lane4results = Lane4Generator.generatePuzzles(seedWords.shuffled(), 0, seedWords.size - 1)
-    val result = (box3results + lane4results).shuffled()
-    write(result, "result.txt")
+    val box3results = Box3Generator.generatePuzzles(seedWords.shuffled())
+//    val lane4results = Lane4Generator.generatePuzzles(seedWords.shuffled())
+//    val result = (box3results + lane4results).shuffled()
+    write(box3results, "result.txt")
 }
 
 fun getWords(fileName: String): List<String> {
@@ -27,11 +27,9 @@ fun write(words: List<String>, destinationFileName: String) {
 }
 
 object Box3Generator {
-    fun generatePuzzles(seedWords: List<String>, start: Int, end: Int): List<String> {
+    fun generatePuzzles(seedWords: List<String>, maxAmount: Int = seedWords.size): List<String> {
         val result = mutableListOf<String>()
-        val word1options = seedWords.subList(start, end)
-        var processed = 0 // this is temporary, for watching progress
-        for (word1 in word1options) {
+        for ((amountAttempted, word1) in seedWords.withIndex()) {
             for (i in seedWords.indices) {
                 val word2 = seedWords.random()
                 if (word1.last() != word2.first()) continue
@@ -42,11 +40,10 @@ object Box3Generator {
                 if (puzzle.size != 12) continue
                 val encodedPuzzle = "box3|${puzzle.joinToString("")}|$word1,$word2"
                 result.add(encodedPuzzle)
-                println(encodedPuzzle)
                 break
             }
-            println(++processed)
-            if (result.size >= 50) break
+            print("\rGenerating Puzzles: ${amountAttempted+1}/${seedWords.size} words attempted, ${result.size}/$maxAmount puzzles generated.")
+            if (result.size >= maxAmount) break
         }
         return result
     }
@@ -63,14 +60,23 @@ object Box3Generator {
 
     private fun works(puzzleSequence: List<Char>, wordSequence: String): Boolean {
         // this assumes all chars in wordSequence are part of puzzleSequence
-        // TODO maybe add getSideOf function to not rely on "floor division"
-        var currentSide = puzzleSequence.indexOf(wordSequence[0]) / 3
+        var currentSide = getSideOf(puzzleSequence.indexOf(wordSequence[0]))
         wordSequence.drop(1).forEach {
-            val nextSide = puzzleSequence.indexOf(it) / 3
+            val nextSide = getSideOf(puzzleSequence.indexOf(it))
             if (nextSide == currentSide) return false
             currentSide = nextSide
         }
         return true
+    }
+
+    private fun getSideOf(index: Int): Int {
+        return when (index) {
+            0,1,2 -> 0
+            3,4,5 -> 1
+            6,7,8 -> 2
+            9,10,11 -> 3
+            else -> throw Exception("Box3Generator has a bug")
+        }
     }
 }
 
