@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.shapelet.ui.Box3Board
 import com.shapelet.ui.Lane4Board
+import com.shapelet.ui.PuzzleDatabase
 import com.shapelet.ui.Utility
 import com.shapelet.ui.Words
 import com.shapelet.ui.theme.ShapeletTheme
@@ -16,9 +17,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         Words.initialize(applicationContext)
+        PuzzleDatabase.initialize(applicationContext)
 
-        val boardEncoding = "lane4|kranbceshidl|bleachers,sickened"
-        val board = Utility.decode(boardEncoding)
+        val puzzleChoice = PuzzleDatabase.puzzles.random()
+        println("Puzzle Choice: $puzzleChoice")
+        val board = Utility.decode(puzzleChoice)
 
         setContent {
             ShapeletTheme {

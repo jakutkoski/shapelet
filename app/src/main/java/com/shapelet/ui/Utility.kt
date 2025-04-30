@@ -224,6 +224,25 @@ object Words {
     }
 }
 
+object PuzzleDatabase {
+    private var initialized = false
+    lateinit var puzzles: List<String> private set
+
+    fun initialize(context: Context) {
+        if (initialized) return
+        initialized = true
+        val processed = mutableListOf<String>()
+        val inputStream = context.assets.open("test_puzzles.txt")
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        var line = reader.readLine()
+        while (line != null) {
+            processed.add(line)
+            line = reader.readLine()
+        }
+        puzzles = processed.toList()
+    }
+}
+
 object Constants {
     const val SUBMIT = -9001
     const val COMPLETE = -9002

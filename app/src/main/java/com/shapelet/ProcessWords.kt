@@ -2,16 +2,15 @@ package com.shapelet
 
 import java.io.File
 
-// TODO
-// generate 50 box3, 50 lane4, shuffle all, save to file
-
 const val allWordsFileName = "app/src/main/assets/all_words.txt"
 const val seedWordsFileName = "words/seed_words.txt"
 const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
     val seedWords = getWords(seedWordsFileName)
-    val result = Lane4Generator.generatePuzzles(seedWords, 0, 10_000)
+    val box3results = Box3Generator.generatePuzzles(seedWords.shuffled(), 0, seedWords.size - 1)
+    val lane4results = Lane4Generator.generatePuzzles(seedWords.shuffled(), 0, seedWords.size - 1)
+    val result = (box3results + lane4results).shuffled()
     write(result, "result.txt")
 }
 
@@ -47,6 +46,7 @@ object Box3Generator {
                 break
             }
             println(++processed)
+            if (result.size >= 50) break
         }
         return result
     }
@@ -94,6 +94,7 @@ object Lane4Generator {
                 break
             }
             println(++processed)
+            if (result.size >= 50) break
         }
         return result
     }
