@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
 
         Words.initialize(applicationContext)
 
-        val boardEncoding = "box3|ebfnaitucvld|abdicate,eventful"
+        val boardEncoding = "lane4|kranbceshidl|bleachers,sickened"
         val board = Utility.decode(boardEncoding)
 
         setContent {

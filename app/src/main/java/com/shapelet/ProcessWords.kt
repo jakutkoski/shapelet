@@ -10,11 +10,8 @@ const val seedWordsFileName = "words/seed_words.txt"
 const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
-    val words = getWords(seedWordsFileName)
-    val allWords = getWords(allWordsFileName)
-    val result = words.filter {
-        it in allWords
-    }
+    val seedWords = getWords(seedWordsFileName)
+    val result = Lane4Generator.generatePuzzles(seedWords, 0, 10_000)
     write(result, "result.txt")
 }
 
@@ -66,6 +63,7 @@ object Box3Generator {
 
     private fun works(puzzleSequence: List<Char>, wordSequence: String): Boolean {
         // this assumes all chars in wordSequence are part of puzzleSequence
+        // TODO maybe add getSideOf function to not rely on "floor division"
         var currentSide = puzzleSequence.indexOf(wordSequence[0]) / 3
         wordSequence.drop(1).forEach {
             val nextSide = puzzleSequence.indexOf(it) / 3
@@ -77,7 +75,6 @@ object Box3Generator {
 }
 
 object Lane4Generator {
-    // TODO update this
     fun generatePuzzles(seedWords: List<String>, start: Int, end: Int): List<String> {
         val result = mutableListOf<String>()
         val word1options = seedWords.subList(start, end)
@@ -91,7 +88,7 @@ object Lane4Generator {
                 if (uniqueLetters.size != 12) continue
                 val puzzle = generatePuzzle(uniqueLetters, wordSequence)
                 if (puzzle.size != 12) continue
-                val encodedPuzzle = "box3|${puzzle.joinToString("")}|$word1,$word2"
+                val encodedPuzzle = "lane4|${puzzle.joinToString("")}|$word1,$word2"
                 result.add(encodedPuzzle)
                 println(encodedPuzzle)
                 break
@@ -113,12 +110,20 @@ object Lane4Generator {
 
     private fun works(puzzleSequence: List<Char>, wordSequence: String): Boolean {
         // this assumes all chars in wordSequence are part of puzzleSequence
-        var currentSide = puzzleSequence.indexOf(wordSequence[0]) / 3
+        var currentSide = getSideOf(puzzleSequence.indexOf(wordSequence[0]))
         wordSequence.drop(1).forEach {
-            val nextSide = puzzleSequence.indexOf(it) / 3
+            val nextSide = getSideOf(puzzleSequence.indexOf(it))
             if (nextSide == currentSide) return false
             currentSide = nextSide
         }
         return true
+    }
+
+    private fun getSideOf(index: Int): Int {
+        return when (index) {
+            0,1,2,3,8,9,10,11 -> 0
+            4,5,6,7 -> 1
+            else -> throw Exception("Lane4Generator has a bug")
+        }
     }
 }
