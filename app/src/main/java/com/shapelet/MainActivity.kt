@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.shapelet.ui.Box3Board
-import com.shapelet.ui.Lane4Board
+import com.shapelet.ui.BoxBoard
+import com.shapelet.ui.LaneBoard
 import com.shapelet.ui.PuzzleDatabase
 import com.shapelet.ui.Utility
 import com.shapelet.ui.Words
@@ -26,8 +26,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ShapeletTheme {
                 when (board.type) {
-                    "box3" -> Box3Board(this@MainActivity, board.puzzle)
-                    "lane4" -> Lane4Board(this@MainActivity, board.puzzle)
+                    "box" -> BoxBoard(this@MainActivity, board.puzzle)
+                    "lane" -> LaneBoard(this@MainActivity, board.puzzle)
                     else -> throw Exception("board type ${board.type} does not exist")
                 }
             }

@@ -8,9 +8,9 @@ const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
     val seedWords = getWords(seedWordsFileName)
-    val box3results = Box3PuzzleGenerator().generatePuzzles(seedWords.shuffled(), 2000)
-    val lane4results = Lane4PuzzleGenerator().generatePuzzles(seedWords.shuffled(), 2000)
-    val result = (box3results + lane4results).shuffled()
+    val boxResults = BoxPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
+    val laneResults = LanePuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
+    val result = (boxResults + laneResults).shuffled()
     write(result, "result.txt")
 }
 
@@ -26,7 +26,7 @@ fun write(words: List<String>, destinationFileName: String) {
     }
 }
 
-abstract class PuzzleGenerator(private val type: String, private val puzzleSize: Int) {
+abstract class PuzzleGenerator(private val type: String) {
     abstract fun getSideOf(index: Int): Int
 
     fun generatePuzzles(seedWords: List<String>, maxAmount: Int = seedWords.size): List<String> {
@@ -38,9 +38,9 @@ abstract class PuzzleGenerator(private val type: String, private val puzzleSize:
                 if (word1.last() != word2.first()) continue
                 val wordSequence = word1.dropLast(1) + word2
                 val uniqueLetters = wordSequence.groupBy { it }.keys.toList()
-                if (uniqueLetters.size != puzzleSize) continue
+                if (uniqueLetters.size != 12) continue
                 val puzzle = generatePuzzle(uniqueLetters, wordSequence)
-                if (puzzle.size != puzzleSize) continue
+                if (puzzle.size != 12) continue
                 val encodedPuzzle = "$type|${puzzle.joinToString("")}|$word1,$word2"
                 result.add(encodedPuzzle)
                 break
@@ -74,7 +74,7 @@ abstract class PuzzleGenerator(private val type: String, private val puzzleSize:
     }
 }
 
-class Box3PuzzleGenerator: PuzzleGenerator("box3", 12) {
+class BoxPuzzleGenerator: PuzzleGenerator("box") {
     override fun getSideOf(index: Int): Int {
         return when (index) {
             0,1,2 -> 0
@@ -86,7 +86,7 @@ class Box3PuzzleGenerator: PuzzleGenerator("box3", 12) {
     }
 }
 
-class Lane4PuzzleGenerator: PuzzleGenerator("lane4", 12) {
+class LanePuzzleGenerator: PuzzleGenerator("lane") {
     override fun getSideOf(index: Int): Int {
         return when (index) {
             0,1,2,3,8,9,10,11 -> 0

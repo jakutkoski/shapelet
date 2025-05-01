@@ -168,14 +168,14 @@ object Utility {
 
     fun getIncompatibleIds(boardType: String, id: Int): Set<Int> {
         return when (boardType) {
-            "box3" -> when (id) {
+            "box" -> when (id) {
                 0,1,2 -> setOf(0,1,2)
                 3,4,5 -> setOf(3,4,5)
                 6,7,8 -> setOf(6,7,8)
                 9,10,11 -> setOf(9,10,11)
                 else -> throw InvalidIdException(id, boardType)
             }
-            "lane4" -> when (id) {
+            "lane" -> when (id) {
                 0,1,2,3,8,9,10,11 -> setOf(0,1,2,3,8,9,10,11)
                 4,5,6,7 -> setOf(4,5,6,7)
                 else -> throw InvalidIdException(id, boardType)

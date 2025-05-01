@@ -1,16 +1,21 @@
-TODO:
+TODO NEXT:
 
-- better highlighting of current word being worked on
+- decide every board type: box, cup, mirror, lane (maybe delete)
+- more contrast for used vs unused buttons
+- italicize words already submitted, underline word being worked on
+- vowel highlighting in buttons
+
+TODO LATER:
+
+- Room DB?
+- insight system: gain X insight when solved in Y words (Y:X | 5:1, 4:3, 3:9, 2:27, 1:81)
+- insight system: reveal first special word after gaining 20 insight, then second special word after 50 insight
+- medal system: bronze medal after 20 insight, silver medal after 50 insight, gold medal after 100 insight
+- menu: tab for filterable list of all puzzles, tab for "settings" and stats
 - make Toast look better
-- generate all puzzles
 - UI improvements
-- customizable letter highlighting in buttons - vowels by default
 - optimizations - hashmap or binary search for dictionary, line drawing cache, etc.
 - abstractions (maybe) - ViewModel, data layer, dependency injection, etc.
-- Room DB?
-- wisdom system: gain X wisdom when solved in Y words (Y:X | 5:1, 4:3, 3:9, 2:27, 1:81)
-- wisdom system: reveal first special word after gaining 27 wisdom, then second special word after 54 wisdom
-- menu: tab for filterable list of all puzzles, tab for "settings" and stats
 - puzzle curation
 
 board encoding:
@@ -22,10 +27,10 @@ type|letters|special,words
 example of board encoding:
 
 ```
-box3|ebfnaitucvld|abdicate,eventful
+box|ebfnaitucvld|abdicate,eventful
 ```
 
 This encoding would create:
-- A square with 3 letters per side.
+- A square (box) with 3 letters per side.
 - Top side = `ebf`. Left side = `nai`. Right side = `tuc`. Bottom side = `vld`.
 - This puzzle can be solved with special words `abdicate` then `eventful`.
