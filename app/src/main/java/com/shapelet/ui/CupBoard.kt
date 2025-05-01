@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,10 +25,8 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
 
-// TODO probably delete
-
 @Composable
-fun LaneBoard(
+fun CupBoard(
     context: Context,
     puzzle: List<PuzzleLetter>
 ) {
@@ -105,27 +104,44 @@ fun LaneBoard(
             .fillMaxHeight(0.6f)
         ) {
             Row(modifier = Modifier
-                .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Node(puzzle[0], activatedIds, onClickOf(0), node0onGloballyPositioned)
-                Node(puzzle[1], activatedIds, onClickOf(1), node1onGloballyPositioned)
-                Node(puzzle[2], activatedIds, onClickOf(2), node2onGloballyPositioned)
-                Node(puzzle[3], activatedIds, onClickOf(3), node3onGloballyPositioned)
-            }
-            Spacer(modifier = Modifier.size(90.dp))
-            Row(modifier = Modifier
-                .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
                 Node(puzzle[4], activatedIds, onClickOf(4), node4onGloballyPositioned)
+            }
+            Spacer(modifier = Modifier.size(30.dp))
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Node(puzzle[1], activatedIds, onClickOf(1), node1onGloballyPositioned)
                 Node(puzzle[5], activatedIds, onClickOf(5), node5onGloballyPositioned)
+            }
+            Spacer(modifier = Modifier.size(30.dp))
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Node(puzzle[2], activatedIds, onClickOf(2), node2onGloballyPositioned)
                 Node(puzzle[6], activatedIds, onClickOf(6), node6onGloballyPositioned)
+            }
+            Spacer(modifier = Modifier.size(30.dp))
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Node(puzzle[3], activatedIds, onClickOf(3), node3onGloballyPositioned)
                 Node(puzzle[7], activatedIds, onClickOf(7), node7onGloballyPositioned)
             }
-            Spacer(modifier = Modifier.size(90.dp))
+            Spacer(modifier = Modifier.size(30.dp))
             Row(modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(start = 30.dp, end = 30.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Node(puzzle[8], activatedIds, onClickOf(8), node8onGloballyPositioned)

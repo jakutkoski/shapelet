@@ -1,5 +1,6 @@
 TODO NEXT:
 
+- create MirrorBoard
 - decide every board type: box, cup, mirror, lane (maybe delete)
 - more contrast for used vs unused buttons
 - italicize words already submitted, underline word being worked on

@@ -8,10 +8,11 @@ const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
     val seedWords = getWords(seedWordsFileName)
-    val boxResults = BoxPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
-    val laneResults = LanePuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
-    val result = (boxResults + laneResults).shuffled()
-    write(result, "result.txt")
+    val result = mutableListOf<String>()
+    result += BoxPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
+    result += CupPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
+    result += MirrorPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
+    write(result.shuffled(), "result.txt")
 }
 
 fun getWords(fileName: String): List<String> {
@@ -86,11 +87,22 @@ class BoxPuzzleGenerator: PuzzleGenerator("box") {
     }
 }
 
-class LanePuzzleGenerator: PuzzleGenerator("lane") {
+class CupPuzzleGenerator: PuzzleGenerator("cup") {
     override fun getSideOf(index: Int): Int {
         return when (index) {
-            0,1,2,3,8,9,10,11 -> 0
+            0,1,2,3 -> 0
             4,5,6,7 -> 1
+            8,9,10,11 -> 2
+            else -> throw Exception("${this.javaClass.simpleName} has a bug")
+        }
+    }
+}
+
+class MirrorPuzzleGenerator: PuzzleGenerator("mirror") {
+    override fun getSideOf(index: Int): Int {
+        return when (index) {
+            0,1,2,3,4,5 -> 0
+            6,7,8,9,10,11 -> 1
             else -> throw Exception("${this.javaClass.simpleName} has a bug")
         }
     }

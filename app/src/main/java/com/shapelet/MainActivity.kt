@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.shapelet.ui.BoardTypeException
 import com.shapelet.ui.BoxBoard
+import com.shapelet.ui.CupBoard
 import com.shapelet.ui.LaneBoard
 import com.shapelet.ui.PuzzleDatabase
 import com.shapelet.ui.Utility
@@ -19,7 +21,7 @@ class MainActivity : ComponentActivity() {
         Words.initialize(applicationContext)
         PuzzleDatabase.initialize(applicationContext)
 
-        val puzzleChoice = PuzzleDatabase.puzzles.random()
+        val puzzleChoice = PuzzleDatabase.puzzles.filter { it.startsWith("cup") }.random()
         println("Puzzle Choice: $puzzleChoice")
         val board = Utility.decode(puzzleChoice)
 
@@ -28,7 +30,8 @@ class MainActivity : ComponentActivity() {
                 when (board.type) {
                     "box" -> BoxBoard(this@MainActivity, board.puzzle)
                     "lane" -> LaneBoard(this@MainActivity, board.puzzle)
-                    else -> throw Exception("board type ${board.type} does not exist")
+                    "cup" -> CupBoard(this@MainActivity, board.puzzle)
+                    else -> throw BoardTypeException(board.type)
                 }
             }
         }
