@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -33,11 +34,11 @@ fun Node(
 
     val cornerSize = if (activated) 0 else 20
 
-    val contentColor =
+    val fontWeight =
         if (puzzleLetter.letter in setOf("a", "e", "i", "o", "u"))
-            Color(0xFF800080)
+            FontWeight.ExtraBold
         else
-            Color.Black
+            FontWeight.Normal
 
     OutlinedButton(
         shape = RoundedCornerShape(CornerSize(cornerSize)),
@@ -47,11 +48,11 @@ fun Node(
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White,
-            contentColor = contentColor
+            contentColor = Color.Black
         ),
         onClick = onClick,
         border = border
     ) {
-        Text(text = puzzleLetter.letter.uppercase())
+        Text(text = puzzleLetter.letter.uppercase(), fontWeight = fontWeight)
     }
 }
