@@ -44,6 +44,6 @@ fun Node(
         onClick = onClick,
         border = border
     ) {
-        Text(text = puzzleLetter.letter)
+        Text(text = puzzleLetter.letter.uppercase())
     }
 }

@@ -15,7 +15,7 @@ object Utility {
             when (it) {
                 Constants.SUBMIT -> " - "
                 Constants.COMPLETE -> ""
-                else -> puzzle[it].letter
+                else -> puzzle[it].letter.uppercase()
             }
         }
     }
@@ -89,13 +89,12 @@ object Utility {
                 .dropWhile { it in Constants.INDICATORS }
             if (mostRecentIdSequence.size < 3) return@onClick
             if (getSpelledWord(puzzle, mostRecentIdSequence) !in Words.allWords) {
-                Toast.makeText(context, "Not a word.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Invalid Word", Toast.LENGTH_SHORT).show()
                 return@onClick
             }
             if (checkCanComplete(puzzle, ids)) {
-                val updatedIds = activate(listOf(Constants.COMPLETE))
-                val score = calculateScore(updatedIds)
-                Toast.makeText(context, "You did it! Score: $score", Toast.LENGTH_SHORT).show()
+                activate(listOf(Constants.COMPLETE))
+                Toast.makeText(context, "Completed!", Toast.LENGTH_SHORT).show()
             } else {
                 activate(listOf(Constants.SUBMIT, lastId))
             }
@@ -104,25 +103,6 @@ object Utility {
 
     fun centerNodeOffset(offset: Offset, nodeLength: Float): Offset {
         return offset.plus(Offset(nodeLength/2.0f, nodeLength/2.0f))
-    }
-
-    fun calculateScore(
-        ids: List<Int>
-    ): Int {
-        val amountOfWords = ids.count { it in Constants.INDICATORS }
-        return when (amountOfWords) {
-            1 -> 100
-            2 -> 80
-            3 -> 40
-            4 -> 20
-            5 -> 10
-            6 -> 5
-            7 -> 4
-            8 -> 3
-            9 -> 2
-            10 -> 1
-            else -> 0
-        }
     }
 
     fun drawSideLine(drawScope: DrawScope, start: Offset, end: Offset, nodeLength: Float) {
