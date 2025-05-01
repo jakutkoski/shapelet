@@ -8,6 +8,7 @@ import com.shapelet.ui.BoardTypeException
 import com.shapelet.ui.BoxBoard
 import com.shapelet.ui.CupBoard
 import com.shapelet.ui.LaneBoard
+import com.shapelet.ui.MirrorBoard
 import com.shapelet.ui.PuzzleDatabase
 import com.shapelet.ui.Utility
 import com.shapelet.ui.Words
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
         Words.initialize(applicationContext)
         PuzzleDatabase.initialize(applicationContext)
 
-        val puzzleChoice = PuzzleDatabase.puzzles.filter { it.startsWith("cup") }.random()
+        val puzzleChoice = PuzzleDatabase.puzzles.random()
         println("Puzzle Choice: $puzzleChoice")
         val board = Utility.decode(puzzleChoice)
 
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
                     "box" -> BoxBoard(this@MainActivity, board.puzzle)
                     "lane" -> LaneBoard(this@MainActivity, board.puzzle)
                     "cup" -> CupBoard(this@MainActivity, board.puzzle)
+                    "mirror" -> MirrorBoard(this@MainActivity, board.puzzle)
                     else -> throw BoardTypeException(board.type)
                 }
             }
