@@ -31,15 +31,23 @@ fun Node(
         else -> BorderStroke(1.dp, Color.Black)
     }
 
+    val cornerSize = if (activated) 0 else 20
+
+    val contentColor =
+        if (puzzleLetter.letter in setOf("a", "e", "i", "o", "u"))
+            Color(0xFF800080)
+        else
+            Color.Black
+
     OutlinedButton(
-        shape = RoundedCornerShape(CornerSize(0)),
+        shape = RoundedCornerShape(CornerSize(cornerSize)),
         modifier = Modifier
             .size(45.dp)
             .onGloballyPositioned(onGloballyPositioned),
         contentPadding = PaddingValues(0.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White,
-            contentColor = Color.Black
+            contentColor = contentColor
         ),
         onClick = onClick,
         border = border
