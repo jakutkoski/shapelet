@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import com.shapelet.ui.BoardTypeException
 import com.shapelet.ui.BoxBoard
 import com.shapelet.ui.CupBoard
-import com.shapelet.ui.LaneBoard
 import com.shapelet.ui.MirrorBoard
 import com.shapelet.ui.PuzzleDatabase
 import com.shapelet.ui.Utility
@@ -30,7 +29,6 @@ class MainActivity : ComponentActivity() {
             ShapeletTheme {
                 when (board.type) {
                     "box" -> BoxBoard(this@MainActivity, board.puzzle)
-                    "lane" -> LaneBoard(this@MainActivity, board.puzzle)
                     "cup" -> CupBoard(this@MainActivity, board.puzzle)
                     "mirror" -> MirrorBoard(this@MainActivity, board.puzzle)
                     else -> throw BoardTypeException(board.type)

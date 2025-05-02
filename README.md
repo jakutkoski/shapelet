@@ -1,7 +1,7 @@
 TODO NEXT:
 
-- decide every board type: box, cup, mirror, lane (maybe delete)
 - make activation lines seem more "in the background"
+- investigate better Toasts
 
 TODO LATER:
 
