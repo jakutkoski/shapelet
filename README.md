@@ -1,7 +1,7 @@
 TODO NEXT:
 
 - decide every board type: box, cup, mirror, lane (maybe delete)
-- italicize words already submitted, underline word being worked on
+- make activation lines seem more "in the background"
 
 TODO LATER:
 
@@ -10,6 +10,7 @@ TODO LATER:
 - insight system: reveal first special word after gaining 20 insight, then second special word after 50 insight
 - medal system: bronze medal after 20 insight, silver medal after 50 insight, gold medal after 100 insight
 - menu: tab for filterable list of all puzzles, tab for "settings" and stats
+- italicize solution words already submitted
 - make Toast look better
 - UI improvements
 - optimizations - hashmap or binary search for dictionary, line drawing cache, etc.

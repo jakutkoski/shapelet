@@ -17,6 +17,11 @@ object Utility {
                 Constants.COMPLETE -> ""
                 else -> puzzle[it].letter.uppercase()
             }
+        }.let {
+            when {
+                it.isBlank() || ids.contains(Constants.COMPLETE) -> it
+                else -> it + "_"
+            }
         }
     }
 
