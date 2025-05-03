@@ -7,12 +7,9 @@ const val seedWordsFileName = "words/seed_words.txt"
 const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
-    val seedWords = getWords(seedWordsFileName)
-    val result = mutableListOf<String>()
-    result += BoxPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
-    result += CupPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
-    result += MirrorPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 200)
-    write(result.shuffled(), "result.txt")
+    val offensiveWords = getWords(offensiveWordsFileName)
+    val result = offensiveWords.distinct().sorted()
+    write(result, "result.txt")
 }
 
 fun getWords(fileName: String): List<String> {

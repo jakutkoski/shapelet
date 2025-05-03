@@ -13,4 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-offensive_words.txt
+# offensive_words.txt
