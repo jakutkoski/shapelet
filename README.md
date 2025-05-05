@@ -5,6 +5,8 @@ TODO NEXT:
 
 TODO LATER:
 
+- verify generated puzzles can be solved in multiple ways, up to 100 insight
+- code to analyze how difficult a puzzle is based on amount of vowels, high-frequency letters, etc.
 - Room DB?
 - insight system: gain X insight when solved in Y words (Y:X | 5:1, 4:3, 3:9, 2:27, 1:81)
 - insight system: reveal first special word after gaining 20 insight, then second special word after 50 insight
