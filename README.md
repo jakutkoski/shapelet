@@ -1,6 +1,5 @@
 TODO NEXT:
 
-- make activation lines seem more "in the background"
 - investigate better Toasts
 
 TODO LATER:

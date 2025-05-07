@@ -125,30 +125,29 @@ object Utility {
         nodeLength: Float,
         offsetOf: (Int) -> Offset
     ) {
-        if (ids.size >= 2) {
-            val lastSubmitIndex = ids.lastIndexOf(Constants.SUBMIT)
-            var i = 0
-            while (i + 1 < ids.size) {
-                val firstId = ids[i]
-                val secondId = ids[i + 1]
-                if (firstId !in Constants.INDICATORS && secondId !in Constants.INDICATORS) {
-                    val completed = checkCompleted(ids)
-                    drawScope.drawLine(
-                        start = centerNodeOffset(offsetOf(firstId), nodeLength),
-                        end = centerNodeOffset(offsetOf(secondId), nodeLength),
-                        color = if (completed || i + 1 < lastSubmitIndex)
-                            Constants.ACTIVATION_GREEN_TRANSPARENT
-                        else
-                            Color.Black,
-                        strokeWidth = Constants.STROKE_WIDTH,
-                        pathEffect = if (completed || i + 1 < lastSubmitIndex)
-                            null
-                        else
-                            Constants.DOTTED_PATH_EFFECT
-                    )
-                }
-                i++
+        if (ids.size <= 1) return
+        val lastSubmitIndex = ids.lastIndexOf(Constants.SUBMIT)
+        var i = 0
+        while (i + 1 < ids.size) {
+            val firstId = ids[i]
+            val secondId = ids[i + 1]
+            if (firstId !in Constants.INDICATORS && secondId !in Constants.INDICATORS) {
+                val completed = checkCompleted(ids)
+                drawScope.drawLine(
+                    start = centerNodeOffset(offsetOf(firstId), nodeLength),
+                    end = centerNodeOffset(offsetOf(secondId), nodeLength),
+                    color = if (completed || i + 1 < lastSubmitIndex)
+                        Constants.ACTIVATION_GREEN_TRANSPARENT
+                    else
+                        Color.Black,
+                    strokeWidth = Constants.STROKE_WIDTH,
+                    pathEffect = if (completed || i + 1 < lastSubmitIndex)
+                        null
+                    else
+                        Constants.DOTTED_PATH_EFFECT
+                )
             }
+            i++
         }
     }
 
