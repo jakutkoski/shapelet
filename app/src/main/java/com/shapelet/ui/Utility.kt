@@ -1,7 +1,6 @@
 package com.shapelet.ui
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -49,60 +48,11 @@ object Utility {
     ): () -> Unit {
         return onClick@{
             if (ids.isNotEmpty()) {
+                if (ids.size >= 100) return@onClick
                 if (checkCompleted(ids)) return@onClick
                 if (ids.last() in puzzle[id].incompatibleIds) return@onClick
             }
             activate(listOf(id))
-        }
-    }
-
-    fun getDeleteOnClick(
-        ids: List<Int>,
-        delete: (Int) -> List<Int>
-    ): () -> Unit {
-        return onClick@{
-            if (ids.isEmpty()) return@onClick
-            if (ids.size <= 3) {
-                delete(1)
-                return@onClick
-            }
-            if (ids.lastIndexOf(Constants.SUBMIT) == ids.size - 2) {
-                delete(2)
-                return@onClick
-            }
-            delete(1)
-        }
-    }
-
-    fun getSubmitOnClick(
-        context: Context,
-        puzzle: List<PuzzleLetter>,
-        ids: List<Int>,
-        activate: (List<Int>) -> List<Int>
-    ): () -> Unit {
-        return onClick@{
-            if (ids.isEmpty()) return@onClick
-            if (checkCompleted(ids)) return@onClick
-            val lastId = ids.last()
-            val startOfMostRecentIdSequence = ids
-                .lastIndexOf(Constants.SUBMIT)
-                .let {
-                    if (it == -1) 0 else it
-                }
-            val mostRecentIdSequence = ids
-                .subList(startOfMostRecentIdSequence, ids.size)
-                .dropWhile { it in Constants.INDICATORS }
-            if (mostRecentIdSequence.size < 3) return@onClick
-            if (getSpelledWord(puzzle, mostRecentIdSequence) !in Words.allWords) {
-                Toast.makeText(context, "Invalid Word", Toast.LENGTH_SHORT).show()
-                return@onClick
-            }
-            if (checkCanComplete(puzzle, ids)) {
-                activate(listOf(Constants.COMPLETE))
-                Toast.makeText(context, "Completed!", Toast.LENGTH_SHORT).show()
-            } else {
-                activate(listOf(Constants.SUBMIT, lastId))
-            }
         }
     }
 
@@ -240,7 +190,7 @@ object Constants {
     val INDICATORS = listOf(SUBMIT, COMPLETE)
     val DOTTED_PATH_EFFECT = PathEffect.dashPathEffect(listOf(15.0f, 15.0f).toFloatArray(), 15.0f)
     val ACTIVATION_GREEN = Color(0xFF0AC27B)
-    val ACTIVATION_GREEN_TRANSPARENT = Color(0x440AC27B)
+    val ACTIVATION_GREEN_TRANSPARENT = Color(0x330AC27B)
 }
 
 data class PuzzleLetter(

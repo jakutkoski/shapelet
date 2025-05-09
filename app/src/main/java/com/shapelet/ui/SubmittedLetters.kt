@@ -23,7 +23,8 @@ fun SubmittedLetters(
     ) {
         Text(
             text = Utility.getSpelledActivated(puzzle, activatedIds),
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier.fillMaxHeight(),
+            maxLines = 3
         )
     }
 }

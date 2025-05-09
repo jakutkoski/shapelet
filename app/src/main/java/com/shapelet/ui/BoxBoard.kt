@@ -1,6 +1,5 @@
 package com.shapelet.ui
 
-import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BoxBoard(
-    context: Context,
+    snackbarHostState: SnackbarHostState,
     puzzle: List<PuzzleLetter>
 ) {
     var activatedIds by rememberSaveable { mutableStateOf(listOf<Int>()) }
@@ -152,6 +152,6 @@ fun BoxBoard(
             }
         }
 
-        BoardButtons(context, puzzle, activatedIds, activate, delete)
+        BoardButtons(snackbarHostState, puzzle, activatedIds, activate, delete)
     }
 }
