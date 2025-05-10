@@ -92,7 +92,6 @@ fun BoardButtons(
                     val job = scope.launch {
                         snackbarHostState.showSnackbar(
                             message = "Invalid Word",
-                            withDismissAction = true,
                             duration = SnackbarDuration.Short
                         )
                     }
@@ -105,7 +104,6 @@ fun BoardButtons(
                     val job = scope.launch {
                         snackbarHostState.showSnackbar(
                             message = "Completed",
-                            withDismissAction = true,
                             duration = SnackbarDuration.Short
                         )
                     }

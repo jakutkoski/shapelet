@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         Words.initialize(applicationContext)
         PuzzleDatabase.initialize(applicationContext)
 
-        val puzzleChoice = PuzzleDatabase.puzzles.filter { it.startsWith("box") }.random()
+        val puzzleChoice = PuzzleDatabase.puzzles.filter { !it.startsWith("mirror") }.random()
         println("Puzzle Choice: $puzzleChoice")
         val board = Utility.decode(puzzleChoice)
 

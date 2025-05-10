@@ -1,10 +1,11 @@
 TODO NEXT:
 
-- Room DB?
+- app architecture with Navigation and Room DB
 - menu: tab for filterable list of all puzzles, tab for "settings" and stats
 
 TODO LATER:
 
+- replace mirror with hat? row of 6 on top, two side columns with 3 each
 - insight system: gain X insight when solved in Y words (Y:X | 5:1, 4:3, 3:9, 2:27, 1:81)
 - insight system: reveal first special word after gaining 20 insight, then second special word after 50 insight
 - medal system: bronze medal after 20 insight, silver medal after 50 insight, gold medal after 100 insight
