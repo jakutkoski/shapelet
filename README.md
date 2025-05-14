@@ -1,6 +1,6 @@
 TODO NEXT:
 
-- app architecture with Navigation and Room DB
+- app architecture with Navigation and Room DB (do this in a new git branch)
 - menu: tab for filterable list of all puzzles, tab for settings/stats
 
 TODO LATER:
