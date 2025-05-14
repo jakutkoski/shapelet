@@ -1,20 +1,21 @@
 TODO NEXT:
 
 - app architecture with Navigation and Room DB
-- menu: tab for filterable list of all puzzles, tab for "settings" and stats
+- menu: tab for filterable list of all puzzles, tab for settings/stats
 
 TODO LATER:
 
-- replace mirror with hat? row of 6 on top, two side columns with 3 each
-- insight system: gain X insight when solved in Y words (Y:X | 5:1, 4:3, 3:9, 2:27, 1:81)
-- insight system: reveal first special word after gaining 20 insight, then second special word after 50 insight
-- medal system: bronze medal after 20 insight, silver medal after 50 insight, gold medal after 100 insight
-- italicize solution words already submitted
-- verify generated puzzles can be solved in multiple ways, up to 100 insight
+- determine third puzzle type
+- star system: earn 1-5 stars depending on puzzle solutions
+- (solving in fewer words should be rewarded, but also solving it in many different ways should be rewarded)
+- reveal system: reveal the original "special words" solution after earning certain amount of stars
+- italicize solution sequences that were already submitted
+- verify generated puzzles can be solved in multiple ways
 - code to analyze how difficult a puzzle is based on amount of vowels, high-frequency letters, etc.
-- UI improvements
+- TBD UI improvements
+- add music elements? hit in-key notes when letters are tapped? adjust music based on submitted words?
+- change color of activation lines as more words are submitted (green to yellow to red, where red indicates beyond 5 words)
 - optimizations - hashmap or binary search for dictionary, line drawing cache, etc.
-- abstractions (maybe) - ViewModel, data layer, dependency injection, etc.
 - puzzle curation
 
 board encoding:
