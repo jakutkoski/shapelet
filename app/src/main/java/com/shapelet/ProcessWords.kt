@@ -7,9 +7,10 @@ const val seedWordsFileName = "words/seed_words.txt"
 const val offensiveWordsFileName = "words/offensive_words.txt"
 
 fun main(args: Array<String>) {
-    val offensiveWords = getWords(offensiveWordsFileName)
-    val result = offensiveWords.distinct().sorted()
-    write(result, "result.txt")
+    val seedWords = getWords(seedWordsFileName)
+    val boxPuzzles = BoxPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 300)
+    val cupPuzzles = CupPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 300)
+    write(boxPuzzles + cupPuzzles, "result.txt")
 }
 
 fun getWords(fileName: String): List<String> {
@@ -90,16 +91,6 @@ class CupPuzzleGenerator: PuzzleGenerator("cup") {
             0,1,2,3 -> 0
             4,5,6,7 -> 1
             8,9,10,11 -> 2
-            else -> throw Exception("${this.javaClass.simpleName} has a bug")
-        }
-    }
-}
-
-class MirrorPuzzleGenerator: PuzzleGenerator("mirror") {
-    override fun getSideOf(index: Int): Int {
-        return when (index) {
-            0,1,2,3,4,5 -> 0
-            6,7,8,9,10,11 -> 1
             else -> throw Exception("${this.javaClass.simpleName} has a bug")
         }
     }

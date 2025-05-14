@@ -12,7 +12,6 @@ import androidx.compose.material3.SnackbarHostState
 import com.shapelet.ui.BoardTypeException
 import com.shapelet.ui.BoxBoard
 import com.shapelet.ui.CupBoard
-import com.shapelet.ui.MirrorBoard
 import com.shapelet.ui.PuzzleDatabase
 import com.shapelet.ui.Utility
 import com.shapelet.ui.Words
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
         Words.initialize(applicationContext)
         PuzzleDatabase.initialize(applicationContext)
 
-        val puzzleChoice = PuzzleDatabase.puzzles.filter { !it.startsWith("mirror") }.random()
+        val puzzleChoice = PuzzleDatabase.puzzles.random()
         println("Puzzle Choice: $puzzleChoice")
         val board = Utility.decode(puzzleChoice)
 
@@ -51,7 +50,6 @@ class MainActivity : ComponentActivity() {
                     when (board.type) {
                         "box" -> BoxBoard(snackbarHostState, board.puzzle)
                         "cup" -> CupBoard(snackbarHostState, board.puzzle)
-                        "mirror" -> MirrorBoard(snackbarHostState, board.puzzle)
                         else -> throw BoardTypeException(board.type)
                     }
                 }
