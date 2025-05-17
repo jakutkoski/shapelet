@@ -1,11 +1,11 @@
 ### TODO FINAL
 
-- make TopBar look a bit better
-- make gap between TopBar and submitted letters look a bit better
+- shared preferences to save progress
+- dialog to ask continue or new
 - general clean up
 - mild puzzle curation
 - testing
-- decide how many solves required to reveal special words
+- decide how many solves required to reveal key words
 - add screenshots to readme
 - generate final apk
 
@@ -29,7 +29,7 @@ Here is a list of things I would work on if I was still working on it:
 board encoding:
 
 ```
-type|letters|special,words
+type|letters|key,words
 ```
 
 example of board encoding:
@@ -41,7 +41,7 @@ box|ebfnaitucvld|abdicate,eventful
 This encoding would create:
 - A square (box) with 3 letters per side.
 - Top side = `ebf`. Left side = `nai`. Right side = `tuc`. Bottom side = `vld`.
-- This puzzle can be solved with special words `abdicate` then `eventful`.
+- This puzzle can be solved with key words `abdicate` then `eventful`.
 
 ### Screenshots
 

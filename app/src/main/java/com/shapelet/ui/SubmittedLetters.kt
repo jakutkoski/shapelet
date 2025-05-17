@@ -18,13 +18,13 @@ fun SubmittedLetters(
     Row(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight(0.25f)
-        .padding(start = 10.dp, top = 100.dp, end = 10.dp),
+        .padding(start = 10.dp, top = 120.dp, end = 10.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
             text = Utility.getSpelledActivated(puzzle, activatedIds),
             modifier = Modifier.fillMaxHeight(),
-            maxLines = 3
+            maxLines = 2
         )
     }
 }

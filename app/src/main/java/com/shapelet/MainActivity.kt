@@ -12,11 +12,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.shapelet.ui.BoardTypeException
 import com.shapelet.ui.BoxBoard
+import com.shapelet.ui.Constants
 import com.shapelet.ui.CupBoard
 import com.shapelet.ui.MessageHandler
 import com.shapelet.ui.PuzzleDatabase
@@ -60,32 +61,24 @@ class MainActivity : ComponentActivity() {
             Solutions.initialize(solutions, updateSolutions)
 
             val amountToUnlock = 5
-            val specialWordsUnlocked = solutions.size >= amountToUnlock
+            val keyWordsUnlocked = solutions.size >= amountToUnlock
 
             ShapeletTheme {
                 Scaffold(
-                    snackbarHost = {
-                        SnackbarHost(
-                            hostState = snackbarHostState,
-                            snackbar = {
-                                // TODO is this needed if I do not customize?
-                                // this is where you can customize how the snackbar looks
-                                Snackbar(
-                                    snackbarData = it
-                                )
-                            }
-                        )
-                    },
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
                     topBar = {
                         TopAppBar(
                             title = {
                                 Text("Solved: ${solutions.size}")
                             },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = Constants.ACTIVATION_GREEN_TRANSPARENT
+                            ),
                             actions = {
                                 IconButton(
                                     enabled = true,
                                     onClick = {
-                                        if (specialWordsUnlocked) {
+                                        if (keyWordsUnlocked) {
                                             val message = puzzleChoice
                                                 .substringAfter("|")
                                                 .substringAfter("|")
@@ -93,14 +86,14 @@ class MainActivity : ComponentActivity() {
                                                 .replace(",", " - ")
                                             MessageHandler.show(true, message)
                                         } else {
-                                            val message = "Solve $amountToUnlock different ways to reveal special words"
+                                            val message = "Solve $amountToUnlock different ways to reveal the Key Words"
                                             MessageHandler.show(false, message)
                                         }
                                     }
                                 ) {
                                     Icon(
-                                        imageVector = if (specialWordsUnlocked) Icons.Default.Star else Icons.Default.Lock,
-                                        contentDescription = "Special Words"
+                                        imageVector = if (keyWordsUnlocked) Icons.Default.Star else Icons.Default.Lock,
+                                        contentDescription = "Key Words"
                                     )
                                 }
                             }

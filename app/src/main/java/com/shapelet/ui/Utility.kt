@@ -67,7 +67,7 @@ object Utility {
     ): () -> Unit {
         return onClick@{
             if (ids.isNotEmpty()) {
-                if (ids.size >= 100) return@onClick
+                if (ids.size >= 80) return@onClick
                 if (checkCompleted(ids)) return@onClick
                 if (ids.last() in puzzle[id].incompatibleIds) return@onClick
             }
@@ -124,7 +124,7 @@ object Utility {
         val parts = boardEncoding.split("|")
         val type = parts[0]
         val letters = parts[1].map { it.toString() }
-        val specialWords = parts[2].split(",")
+        val keyWords = parts[2].split(",")
         val puzzleLetters = letters.mapIndexed { index, letter ->
             PuzzleLetter(
                 id = index,
@@ -135,7 +135,7 @@ object Utility {
         return Board(
             type = type,
             puzzle = puzzleLetters,
-            specialWords = specialWords
+            keyWords = keyWords
         )
     }
 
@@ -266,7 +266,7 @@ data class PuzzleLetter(
 data class Board(
     val type: String,
     val puzzle: List<PuzzleLetter>,
-    val specialWords: List<String>
+    val keyWords: List<String>
 )
 
 class GetOffsetException(id: Int): Exception("cannot get offset of node $id since it does not exist")
