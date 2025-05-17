@@ -45,8 +45,9 @@ class MainActivity : ComponentActivity() {
         Words.initialize(applicationContext)
         PuzzleDatabase.initialize(applicationContext)
 
+        val snackbarHostState = SnackbarHostState()
+
         setContent {
-            val snackbarHostState = SnackbarHostState()
             MessageHandler.initialize(rememberCoroutineScope(), snackbarHostState)
 
             var solutions by rememberSaveable { mutableStateOf(listOf<String>()) }
@@ -61,8 +62,7 @@ class MainActivity : ComponentActivity() {
 
             var puzzleChoice by rememberSaveable { mutableStateOf("") }
 
-//            val savedProgress = Solutions.retrieve(applicationContext)
-            val savedProgress: Pair<String, List<String>>? = null
+            val savedProgress = Solutions.retrieve(this)
             if (savedProgress != null && puzzleChoice.isBlank()) {
                 Button(onClick = {
                     puzzleChoice = savedProgress.first
