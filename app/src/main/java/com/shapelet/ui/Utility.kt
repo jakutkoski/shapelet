@@ -44,10 +44,6 @@ object Utility {
         return !checkCompleted(ids) && ids.count { it in Constants.INDICATORS } < 5
     }
 
-    fun updateSolutionHistory(puzzle: List<PuzzleLetter>, ids: List<Int>) {
-        Solutions.solutions.add(asSolution(puzzle, ids))
-    }
-
     fun asSolution(puzzle: List<PuzzleLetter>, ids: List<Int>): String {
         return ids.joinToString("") {
             when (it) {
@@ -196,10 +192,26 @@ object PuzzleDatabase {
     }
 }
 
-// TODO this does not work for getting updates in MainActivity
+// this is an insane way to avoid passing the solutions list from MainActivity down to BoardButtons
 object Solutions {
+    private var initialized = false
+    private lateinit var solutions: List<String>
+    private lateinit var updater: (String) -> List<String>
 
-    val solutions = mutableListOf<String>()
+    fun initialize(solutionsList: List<String>, updaterLambda: (String) -> List<String>) {
+        if (initialized) return
+        initialized = true
+        solutions = solutionsList
+        updater = updaterLambda
+    }
+
+    fun update(solution: String) {
+        solutions = updater(solution)
+    }
+
+    fun get(): List<String> {
+        return solutions
+    }
 
 }
 

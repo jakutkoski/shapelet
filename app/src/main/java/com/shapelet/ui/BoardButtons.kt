@@ -102,7 +102,7 @@ fun BoardButtons(
                     return@onClick
                 }
                 if (checkCanComplete(puzzle, activatedIds)) {
-                    if (asSolution(puzzle, activatedIds) in Solutions.solutions) {
+                    if (asSolution(puzzle, activatedIds) in Solutions.get()) {
                         jobs.forEach(Job::cancel)
                         val job = scope.launch {
                             snackbarHostState.showSnackbar(
@@ -112,7 +112,7 @@ fun BoardButtons(
                         }
                         jobs.add(job)
                     } else {
-                        Utility.updateSolutionHistory(puzzle, activatedIds)
+                        Solutions.update(asSolution(puzzle, activatedIds))
                         activate(listOf(Constants.COMPLETE))
                         jobs.forEach(Job::cancel)
                         val job = scope.launch {

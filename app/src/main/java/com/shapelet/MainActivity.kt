@@ -18,7 +18,11 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import com.shapelet.ui.BoardTypeException
 import com.shapelet.ui.BoxBoard
 import com.shapelet.ui.CupBoard
@@ -47,8 +51,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             val snackbarHostState = SnackbarHostState()
             val scope = rememberCoroutineScope()
+
+            var solutions by rememberSaveable { mutableStateOf(listOf<String>()) }
+            val updateSolutions: (String) -> List<String> = { solution ->
+                solutions = solutions.toMutableList().apply { add(solution) }.toList()
+                solutions
+            }
+            Solutions.initialize(solutions, updateSolutions)
             val amountToUnlock = 5
-            val specialWordsUnlocked = Solutions.solutions.size >= amountToUnlock
+            val specialWordsUnlocked = solutions.size >= amountToUnlock
 
             ShapeletTheme {
                 Scaffold(
@@ -56,6 +67,7 @@ class MainActivity : ComponentActivity() {
                         SnackbarHost(
                             hostState = snackbarHostState,
                             snackbar = {
+                                // TODO is this needed if I do not customize?
                                 // this is where you can customize how the snackbar looks
                                 Snackbar(
                                     snackbarData = it
@@ -66,7 +78,7 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             title = {
-                                Text("Solved: ${Solutions.solutions.size}")
+                                Text("Solved: ${solutions.size}")
                             },
                             actions = {
                                 IconButton(

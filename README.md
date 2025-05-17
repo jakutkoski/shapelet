@@ -1,6 +1,14 @@
 ### TODO FINAL
 
-- reveal system
+- add snackbar job utility handler
+- make TopBar look a bit better
+- make gap between TopBar and submitted letters look a bit better
+- general clean up
+- mild puzzle curation
+- testing
+- decide how many solves required to reveal special words
+- add screenshots to readme
+- generate final apk
 
 ### State of this project
 
