@@ -1,7 +1,7 @@
 ### TODO FINAL
 
 - reveal system
-- disallow submitting past 5 words
+- disallow submitting beyond 5 words
 
 ### State of this project
 

@@ -9,8 +9,7 @@ const val offensiveWordsFileName = "words/offensive_words.txt"
 fun main(args: Array<String>) {
     val seedWords = getWords(seedWordsFileName)
     val boxPuzzles = BoxPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 300)
-    val cupPuzzles = CupPuzzleGenerator().generatePuzzles(seedWords.shuffled(), 300)
-    write(boxPuzzles + cupPuzzles, "result.txt")
+    write(boxPuzzles, "result.txt")
 }
 
 fun getWords(fileName: String): List<String> {
