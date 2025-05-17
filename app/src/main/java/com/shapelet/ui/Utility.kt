@@ -40,6 +40,20 @@ object Utility {
         return ids.lastIndexOf(Constants.COMPLETE) != -1
     }
 
+    fun updateSolutionHistory(puzzle: List<PuzzleLetter>, ids: List<Int>) {
+        Solutions.solutions.add(asSolution(puzzle, ids))
+    }
+
+    fun asSolution(puzzle: List<PuzzleLetter>, ids: List<Int>): String {
+        return ids.joinToString("") {
+            when (it) {
+                Constants.SUBMIT -> ","
+                Constants.COMPLETE -> ""
+                else -> puzzle[it].letter
+            }
+        }
+    }
+
     fun getNodeOnClick(
         puzzle: List<PuzzleLetter>,
         id: Int,
@@ -176,6 +190,13 @@ object PuzzleDatabase {
         }
         puzzles = processed.toList()
     }
+}
+
+// TODO this does not work for getting updates in MainActivity
+object Solutions {
+
+    val solutions = mutableListOf<String>()
+
 }
 
 object Constants {

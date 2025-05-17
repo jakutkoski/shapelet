@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +23,7 @@ import com.shapelet.ui.BoardTypeException
 import com.shapelet.ui.BoxBoard
 import com.shapelet.ui.CupBoard
 import com.shapelet.ui.PuzzleDatabase
+import com.shapelet.ui.Solutions
 import com.shapelet.ui.Utility
 import com.shapelet.ui.Words
 import com.shapelet.ui.theme.ShapeletTheme
@@ -46,6 +48,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val scope = rememberCoroutineScope()
+            val amountToUnlock = 5
+            val specialWordsUnlocked = Solutions.solutions.size >= amountToUnlock
 
             ShapeletTheme {
                 Scaffold(
@@ -63,28 +67,37 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         TopAppBar(
                             title = {
-                                Text("Solutions: 0")
+                                Text("Solved: ${Solutions.solutions.size}")
                             },
                             actions = {
                                 IconButton(
                                     enabled = true,
                                     onClick = {
-                                        scope.launch {
-                                            snackbarHostState.showSnackbar(
-                                                message = puzzleChoice
-                                                    .substringAfter("|")
-                                                    .substringAfter("|")
-                                                    .uppercase()
-                                                    .replace(",", " - ")
-                                                ,
-                                                duration = SnackbarDuration.Indefinite,
-                                                withDismissAction = true
-                                            )
+                                        if (specialWordsUnlocked) {
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    message = puzzleChoice
+                                                        .substringAfter("|")
+                                                        .substringAfter("|")
+                                                        .uppercase()
+                                                        .replace(",", " - ")
+                                                    ,
+                                                    duration = SnackbarDuration.Indefinite,
+                                                    withDismissAction = true
+                                                )
+                                            }
+                                        } else {
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    message = "Solve $amountToUnlock different ways to reveal special words",
+                                                    duration = SnackbarDuration.Short
+                                                )
+                                            }
                                         }
                                     }
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Lock,
+                                        imageVector = if (specialWordsUnlocked) Icons.Default.Star else Icons.Default.Lock,
                                         contentDescription = "Special Words"
                                     )
                                 }

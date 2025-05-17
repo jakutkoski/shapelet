@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.shapelet.ui.Utility.asSolution
 import com.shapelet.ui.Utility.checkCanComplete
 import com.shapelet.ui.Utility.checkCompleted
 import com.shapelet.ui.Utility.getSpelledWord
@@ -99,15 +100,27 @@ fun BoardButtons(
                     return@onClick
                 }
                 if (checkCanComplete(puzzle, activatedIds)) {
-                    activate(listOf(Constants.COMPLETE))
-                    jobs.forEach(Job::cancel)
-                    val job = scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = "Completed",
-                            duration = SnackbarDuration.Short
-                        )
+                    if (asSolution(puzzle, activatedIds) in Solutions.solutions) {
+                        jobs.forEach(Job::cancel)
+                        val job = scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Already solved this way",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                        jobs.add(job)
+                    } else {
+                        Utility.updateSolutionHistory(puzzle, activatedIds)
+                        activate(listOf(Constants.COMPLETE))
+                        jobs.forEach(Job::cancel)
+                        val job = scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Completed",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                        jobs.add(job)
                     }
-                    jobs.add(job)
                 } else {
                     activate(listOf(Constants.SUBMIT, lastId))
                 }
