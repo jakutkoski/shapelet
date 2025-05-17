@@ -1,5 +1,6 @@
 package com.shapelet.ui
 
+import android.app.Activity
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +27,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CupBoard(
-    puzzle: List<PuzzleLetter>
+    activity: Activity,
+    puzzle: List<PuzzleLetter>,
+    encodedPuzzle: String
 ) {
     var activatedIds by rememberSaveable { mutableStateOf(listOf<Int>()) }
     val activate: (List<Int>) -> List<Int> = { ids ->
@@ -149,6 +152,6 @@ fun CupBoard(
             }
         }
 
-        BoardButtons(puzzle, activatedIds, activate, delete)
+        BoardButtons(activity, puzzle, encodedPuzzle, activatedIds, activate, delete)
     }
 }

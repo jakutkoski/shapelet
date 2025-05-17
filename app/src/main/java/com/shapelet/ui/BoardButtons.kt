@@ -1,5 +1,6 @@
 package com.shapelet.ui
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,7 +27,9 @@ import com.shapelet.ui.Utility.getSpelledWord
 
 @Composable
 fun BoardButtons(
+    activity: Activity,
     puzzle: List<PuzzleLetter>,
+    encodedPuzzle: String,
     activatedIds: List<Int>,
     activate: (List<Int>) -> List<Int>,
     delete: (Int) -> List<Int>
@@ -91,6 +94,7 @@ fun BoardButtons(
                         MessageHandler.show(false, "Already solved this way")
                     } else {
                         Solutions.update(asSolution(puzzle, activatedIds))
+                        Solutions.persist(activity, encodedPuzzle, Solutions.get())
                         activate(listOf(Constants.COMPLETE))
                         MessageHandler.show(false, "Solved!")
                     }

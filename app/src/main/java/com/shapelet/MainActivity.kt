@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,14 +45,9 @@ class MainActivity : ComponentActivity() {
         Words.initialize(applicationContext)
         PuzzleDatabase.initialize(applicationContext)
 
-        val puzzleChoice = PuzzleDatabase.puzzles.random()
-        println("Puzzle Choice: $puzzleChoice")
-        val board = Utility.decode(puzzleChoice)
-
         setContent {
             val snackbarHostState = SnackbarHostState()
-            val scope = rememberCoroutineScope()
-            MessageHandler.initialize(scope, snackbarHostState)
+            MessageHandler.initialize(rememberCoroutineScope(), snackbarHostState)
 
             var solutions by rememberSaveable { mutableStateOf(listOf<String>()) }
             val updateSolutions: (String) -> List<String> = { solution ->
@@ -60,8 +56,28 @@ class MainActivity : ComponentActivity() {
             }
             Solutions.initialize(solutions, updateSolutions)
 
-            val amountToUnlock = 5
+            val amountToUnlock = 0
             val keyWordsUnlocked = solutions.size >= amountToUnlock
+
+            var puzzleChoice by rememberSaveable { mutableStateOf("") }
+
+//            val savedProgress = Solutions.retrieve(applicationContext)
+            val savedProgress: Pair<String, List<String>>? = null
+            if (savedProgress != null && puzzleChoice.isBlank()) {
+                Button(onClick = {
+                    puzzleChoice = savedProgress.first
+                    Solutions.update(savedProgress.second)
+                }) {
+                    Text("Continue")
+                }
+                Button(onClick = {
+                    puzzleChoice = PuzzleDatabase.puzzles.random()
+                    Solutions.clear(this)
+                }) {
+                    Text("New")
+                }
+                return@setContent
+            }
 
             ShapeletTheme {
                 Scaffold(
@@ -100,9 +116,13 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
+                    if (puzzleChoice.isBlank()) {
+                        puzzleChoice = PuzzleDatabase.puzzles.random()
+                    }
+                    val board = Utility.decode(puzzleChoice)
                     when (board.type) {
-                        "box" -> BoxBoard(board.puzzle)
-                        "cup" -> CupBoard(board.puzzle)
+                        "box" -> BoxBoard(this, board.puzzle, puzzleChoice)
+                        "cup" -> CupBoard(this, board.puzzle, puzzleChoice)
                         else -> throw BoardTypeException(board.type)
                     }
                 }

@@ -1,5 +1,6 @@
 package com.shapelet.ui
 
+import android.app.Activity
 import android.content.Context
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -197,7 +198,6 @@ object PuzzleDatabase {
     }
 }
 
-// this is an insane way to avoid passing the solutions list from MainActivity down to BoardButtons
 object Solutions {
     private var initialized = false
     private lateinit var solutions: List<String>
@@ -214,8 +214,40 @@ object Solutions {
         solutions = updater(solution)
     }
 
+    fun update(givenSolutions: List<String>) {
+        givenSolutions.forEach {
+            solutions = updater(it)
+        }
+    }
+
     fun get(): List<String> {
         return solutions
+    }
+
+    fun persist(activity: Activity, puzzle: String, userSolutions: List<String>) {
+        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("savedpuzzle", "$puzzle/${userSolutions.joinToString("+")}")
+            apply()
+        }
+    }
+
+    fun clear(activity: Activity) {
+        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("savedpuzzle", "")
+            apply()
+        }
+    }
+
+    fun retrieve(activity: Activity): Pair<String, List<String>>? {
+        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        val retrieved = sharedPref.getString("savedpuzzle", "")
+        if (retrieved.isNullOrBlank()) return null
+        val separated = retrieved.split("/")
+        val puzzle = separated[0]
+        val savedSolutions = separated[1].split("+")
+        return Pair(puzzle, savedSolutions)
     }
 
 }

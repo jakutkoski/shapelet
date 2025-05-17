@@ -1,6 +1,6 @@
 ### TODO FINAL
 
-- shared preferences to save progress
+- DataStore to save progress
 - dialog to ask continue or new
 - general clean up
 - mild puzzle curation
