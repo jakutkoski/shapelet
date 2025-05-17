@@ -44,9 +44,8 @@ class MainActivity : ComponentActivity() {
         println("Puzzle Choice: $puzzleChoice")
         val board = Utility.decode(puzzleChoice)
 
-        val snackbarHostState = SnackbarHostState()
-
         setContent {
+            val snackbarHostState = SnackbarHostState()
             val scope = rememberCoroutineScope()
             val amountToUnlock = 5
             val specialWordsUnlocked = Solutions.solutions.size >= amountToUnlock

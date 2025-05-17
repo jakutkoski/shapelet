@@ -40,6 +40,10 @@ object Utility {
         return ids.lastIndexOf(Constants.COMPLETE) != -1
     }
 
+    fun checkSubmitEnabled(ids: List<Int>): Boolean {
+        return !checkCompleted(ids) && ids.count { it in Constants.INDICATORS } < 5
+    }
+
     fun updateSolutionHistory(puzzle: List<PuzzleLetter>, ids: List<Int>) {
         Solutions.solutions.add(asSolution(puzzle, ids))
     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.shapelet.ui.Utility.asSolution
 import com.shapelet.ui.Utility.checkCanComplete
 import com.shapelet.ui.Utility.checkCompleted
+import com.shapelet.ui.Utility.checkSubmitEnabled
 import com.shapelet.ui.Utility.getSpelledWord
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -75,6 +76,7 @@ fun BoardButtons(
                 containerColor = Color.White,
                 contentColor = Color.Black
             ),
+            enabled = checkSubmitEnabled(activatedIds),
             onClick = onClick@{
                 if (activatedIds.isEmpty()) return@onClick
                 if (checkCompleted(activatedIds)) return@onClick
