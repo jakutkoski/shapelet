@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CupBoard(
-    snackbarHostState: SnackbarHostState,
     puzzle: List<PuzzleLetter>
 ) {
     var activatedIds by rememberSaveable { mutableStateOf(listOf<Int>()) }
@@ -151,6 +149,6 @@ fun CupBoard(
             }
         }
 
-        BoardButtons(snackbarHostState, puzzle, activatedIds, activate, delete)
+        BoardButtons(puzzle, activatedIds, activate, delete)
     }
 }

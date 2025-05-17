@@ -13,7 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -26,12 +25,12 @@ import androidx.compose.runtime.setValue
 import com.shapelet.ui.BoardTypeException
 import com.shapelet.ui.BoxBoard
 import com.shapelet.ui.CupBoard
+import com.shapelet.ui.MessageHandler
 import com.shapelet.ui.PuzzleDatabase
 import com.shapelet.ui.Solutions
 import com.shapelet.ui.Utility
 import com.shapelet.ui.Words
 import com.shapelet.ui.theme.ShapeletTheme
-import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +50,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val snackbarHostState = SnackbarHostState()
             val scope = rememberCoroutineScope()
+            MessageHandler.initialize(scope, snackbarHostState)
 
             var solutions by rememberSaveable { mutableStateOf(listOf<String>()) }
             val updateSolutions: (String) -> List<String> = { solution ->
@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
                 solutions
             }
             Solutions.initialize(solutions, updateSolutions)
+
             val amountToUnlock = 5
             val specialWordsUnlocked = solutions.size >= amountToUnlock
 
@@ -85,25 +86,15 @@ class MainActivity : ComponentActivity() {
                                     enabled = true,
                                     onClick = {
                                         if (specialWordsUnlocked) {
-                                            scope.launch {
-                                                snackbarHostState.showSnackbar(
-                                                    message = puzzleChoice
-                                                        .substringAfter("|")
-                                                        .substringAfter("|")
-                                                        .uppercase()
-                                                        .replace(",", " - ")
-                                                    ,
-                                                    duration = SnackbarDuration.Indefinite,
-                                                    withDismissAction = true
-                                                )
-                                            }
+                                            val message = puzzleChoice
+                                                .substringAfter("|")
+                                                .substringAfter("|")
+                                                .uppercase()
+                                                .replace(",", " - ")
+                                            MessageHandler.show(true, message)
                                         } else {
-                                            scope.launch {
-                                                snackbarHostState.showSnackbar(
-                                                    message = "Solve $amountToUnlock different ways to reveal special words",
-                                                    duration = SnackbarDuration.Short
-                                                )
-                                            }
+                                            val message = "Solve $amountToUnlock different ways to reveal special words"
+                                            MessageHandler.show(false, message)
                                         }
                                     }
                                 ) {
@@ -117,8 +108,8 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     when (board.type) {
-                        "box" -> BoxBoard(snackbarHostState, board.puzzle)
-                        "cup" -> CupBoard(snackbarHostState, board.puzzle)
+                        "box" -> BoxBoard(board.puzzle)
+                        "cup" -> CupBoard(board.puzzle)
                         else -> throw BoardTypeException(board.type)
                     }
                 }

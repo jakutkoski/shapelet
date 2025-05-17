@@ -1,10 +1,15 @@
 package com.shapelet.ui
 
 import android.content.Context
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -213,6 +218,33 @@ object Solutions {
         return solutions
     }
 
+}
+
+object MessageHandler {
+    private val jobs = mutableListOf<Job>()
+
+    private var initialized = false
+    private lateinit var scope: CoroutineScope
+    private lateinit var snackbarHostState: SnackbarHostState
+
+    fun initialize(givenScope: CoroutineScope, givenSnackbarHostState: SnackbarHostState) {
+        if (initialized) return
+        initialized = true
+        scope = givenScope
+        snackbarHostState = givenSnackbarHostState
+    }
+
+    fun show(interactive: Boolean, message: String) {
+        jobs.forEach(Job::cancel)
+        val job = scope.launch {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = if (interactive) SnackbarDuration.Indefinite else SnackbarDuration.Short,
+                withDismissAction = interactive
+            )
+        }
+        jobs.add(job)
+    }
 }
 
 object Constants {

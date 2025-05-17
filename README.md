@@ -1,6 +1,5 @@
 ### TODO FINAL
 
-- add snackbar job utility handler
 - make TopBar look a bit better
 - make gap between TopBar and submitted letters look a bit better
 - general clean up

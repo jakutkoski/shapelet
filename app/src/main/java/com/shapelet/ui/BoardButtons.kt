@@ -13,11 +13,8 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -26,19 +23,14 @@ import com.shapelet.ui.Utility.checkCanComplete
 import com.shapelet.ui.Utility.checkCompleted
 import com.shapelet.ui.Utility.checkSubmitEnabled
 import com.shapelet.ui.Utility.getSpelledWord
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 @Composable
 fun BoardButtons(
-    snackbarHostState: SnackbarHostState,
     puzzle: List<PuzzleLetter>,
     activatedIds: List<Int>,
     activate: (List<Int>) -> List<Int>,
     delete: (Int) -> List<Int>
 ) {
-    val scope = rememberCoroutineScope()
-    val jobs = mutableListOf<Job>()
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 20.dp),
@@ -91,37 +83,16 @@ fun BoardButtons(
                     .dropWhile { it in Constants.INDICATORS }
                 if (mostRecentIdSequence.size < 3) return@onClick
                 if (getSpelledWord(puzzle, mostRecentIdSequence) !in Words.allWords) {
-                    jobs.forEach(Job::cancel)
-                    val job = scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = "Invalid Word",
-                            duration = SnackbarDuration.Short
-                        )
-                    }
-                    jobs.add(job)
+                    MessageHandler.show(false, "Invalid Word")
                     return@onClick
                 }
                 if (checkCanComplete(puzzle, activatedIds)) {
                     if (asSolution(puzzle, activatedIds) in Solutions.get()) {
-                        jobs.forEach(Job::cancel)
-                        val job = scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Already solved this way",
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                        jobs.add(job)
+                        MessageHandler.show(false, "Already solved this way")
                     } else {
                         Solutions.update(asSolution(puzzle, activatedIds))
                         activate(listOf(Constants.COMPLETE))
-                        jobs.forEach(Job::cancel)
-                        val job = scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Completed",
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                        jobs.add(job)
+                        MessageHandler.show(false, "Solved!")
                     }
                 } else {
                     activate(listOf(Constants.SUBMIT, lastId))
