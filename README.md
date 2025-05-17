@@ -1,7 +1,5 @@
 ### TODO FINAL
 
-- DataStore to save progress
-- dialog to ask continue or new
 - general clean up
 - mild puzzle curation
 - testing
