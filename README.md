@@ -1,6 +1,5 @@
 ### TODO FINAL
 
-- save progress (puzzle) even if user has not submitted solution yet
 - app icon
 - mild puzzle curation
 - testing

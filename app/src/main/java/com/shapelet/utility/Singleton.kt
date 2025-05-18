@@ -207,21 +207,13 @@ object SharedPrefs {
         }
     }
 
-    fun clear(activity: Activity) {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString("savedpuzzle", "")
-            apply()
-        }
-    }
-
-    fun retrieve(activity: Activity): Pair<String, List<String>>? {
+    fun retrieve(activity: Activity): Pair<String, List<String>?>? {
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
         val retrieved = sharedPref.getString("savedpuzzle", "")
         if (retrieved.isNullOrBlank()) return null
         val separated = retrieved.split("/")
         val puzzle = separated[0]
-        val savedSolutions = separated[1].split("+")
+        val savedSolutions = separated[1].takeIf { it.isNotBlank() }?.split("+")
         return Pair(puzzle, savedSolutions)
     }
 }

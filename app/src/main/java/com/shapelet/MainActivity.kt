@@ -61,6 +61,7 @@ class MainActivity : ComponentActivity() {
         Words.initialize(applicationContext)
         PuzzleDatabase.initialize(applicationContext)
         val snackbarHostState = SnackbarHostState()
+
         setContent {
             MessageHandler.initialize(rememberCoroutineScope(), snackbarHostState)
 
@@ -91,7 +92,7 @@ class MainActivity : ComponentActivity() {
                             ),
                             onClick = {
                                 puzzleChoice = savedProgress.first
-                                Solutions.update(savedProgress.second)
+                                savedProgress.second?.let { Solutions.update(it) }
                             }
                         ) {
                             Text("Continue with previous puzzle")
@@ -107,7 +108,7 @@ class MainActivity : ComponentActivity() {
                             ),
                             onClick = {
                                 puzzleChoice = PuzzleDatabase.puzzles.random()
-                                SharedPrefs.clear(this@MainActivity)
+                                SharedPrefs.persist(this@MainActivity, puzzleChoice, emptyList())
                             }
                         ) {
                             Text("Start a new puzzle")
@@ -119,6 +120,7 @@ class MainActivity : ComponentActivity() {
 
             if (puzzleChoice.isBlank()) {
                 puzzleChoice = PuzzleDatabase.puzzles.random()
+                SharedPrefs.persist(this@MainActivity, puzzleChoice, emptyList())
             }
             val board = Utility.decode(puzzleChoice)
 
