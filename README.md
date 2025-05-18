@@ -1,7 +1,3 @@
-### TODO FINAL
-
-- generate final apk
-
 ### State of this project
 
 I don't want to work on this anymore.
