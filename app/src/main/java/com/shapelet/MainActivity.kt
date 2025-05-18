@@ -95,7 +95,8 @@ class MainActivity : ComponentActivity() {
                                 savedProgress.second?.let { Solutions.update(it) }
                             }
                         ) {
-                            Text("Continue with previous puzzle")
+                            val solvedAmount = savedProgress.second?.size ?: 0
+                            Text("Continue (Solved: $solvedAmount)")
                         }
                         Spacer(modifier = Modifier.size(50.dp))
                         OutlinedButton(
@@ -111,7 +112,7 @@ class MainActivity : ComponentActivity() {
                                 SharedPrefs.persist(this@MainActivity, puzzleChoice, emptyList())
                             }
                         ) {
-                            Text("Start a new puzzle")
+                            Text("Start New Puzzle")
                         }
                     }
                 }
@@ -140,7 +141,7 @@ class MainActivity : ComponentActivity() {
                                             val message = board.keyWords.joinToString(" - ").uppercase()
                                             MessageHandler.show(true, message)
                                         } else {
-                                            val message = "Solve ${Constants.UNLOCK_AMOUNT} different ways to reveal the Key Words"
+                                            val message = "Solve ${Constants.UNLOCK_AMOUNT} different ways to reveal Key Words"
                                             MessageHandler.show(false, message)
                                         }
                                     }
