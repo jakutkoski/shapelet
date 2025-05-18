@@ -1,4 +1,4 @@
-package com.shapelet.ui
+package com.shapelet.components
 
 import android.app.Activity
 import androidx.compose.foundation.Canvas
@@ -24,12 +24,14 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
+import com.shapelet.model.Board
+import com.shapelet.utility.GetOffsetException
+import com.shapelet.utility.Utility
 
 @Composable
 fun BoxBoard(
     activity: Activity,
-    puzzle: List<PuzzleLetter>,
-    encodedPuzzle: String
+    board: Board
 ) {
     var activatedIds by rememberSaveable { mutableStateOf(listOf<Int>()) }
     val activate: (List<Int>) -> List<Int> = { ids ->
@@ -72,7 +74,7 @@ fun BoxBoard(
     val node10onGloballyPositioned: (LayoutCoordinates) -> Unit = { node10offset = it.positionInRoot() }
     val node11onGloballyPositioned: (LayoutCoordinates) -> Unit = { node11offset = it.positionInRoot() }
 
-    fun onClickOf(id: Int) = Utility.getNodeOnClick(puzzle, id, activatedIds, activate)
+    fun onClickOf(id: Int) = Utility.getNodeOnClick(board.puzzle, id, activatedIds, activate)
 
     fun offsetOf(id: Int) = when(id) {
         0 -> node0offset
@@ -99,7 +101,7 @@ fun BoxBoard(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        SubmittedLetters(puzzle, activatedIds)
+        SubmittedLetters(board, activatedIds)
 
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -110,9 +112,9 @@ fun BoxBoard(
                 .padding(start = 30.dp, end = 30.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Node(puzzle[0], activatedIds, onClickOf(0), node0onGloballyPositioned)
-                Node(puzzle[1], activatedIds, onClickOf(1), node1onGloballyPositioned)
-                Node(puzzle[2], activatedIds, onClickOf(2), node2onGloballyPositioned)
+                Node(board.puzzle[0], activatedIds, onClickOf(0), node0onGloballyPositioned)
+                Node(board.puzzle[1], activatedIds, onClickOf(1), node1onGloballyPositioned)
+                Node(board.puzzle[2], activatedIds, onClickOf(2), node2onGloballyPositioned)
             }
             Spacer(modifier = Modifier.size(30.dp))
             Row(modifier = Modifier
@@ -120,8 +122,8 @@ fun BoxBoard(
                 .padding(start = 10.dp, end = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Node(puzzle[3], activatedIds, onClickOf(3), node3onGloballyPositioned)
-                Node(puzzle[6], activatedIds, onClickOf(6), node6onGloballyPositioned)
+                Node(board.puzzle[3], activatedIds, onClickOf(3), node3onGloballyPositioned)
+                Node(board.puzzle[6], activatedIds, onClickOf(6), node6onGloballyPositioned)
             }
             Spacer(modifier = Modifier.size(30.dp))
             Row(modifier = Modifier
@@ -129,8 +131,8 @@ fun BoxBoard(
                 .padding(start = 10.dp, end = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Node(puzzle[4], activatedIds, onClickOf(4), node4onGloballyPositioned)
-                Node(puzzle[7], activatedIds, onClickOf(7), node7onGloballyPositioned)
+                Node(board.puzzle[4], activatedIds, onClickOf(4), node4onGloballyPositioned)
+                Node(board.puzzle[7], activatedIds, onClickOf(7), node7onGloballyPositioned)
             }
             Spacer(modifier = Modifier.size(30.dp))
             Row(modifier = Modifier
@@ -138,8 +140,8 @@ fun BoxBoard(
                 .padding(start = 10.dp, end = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Node(puzzle[5], activatedIds, onClickOf(5), node5onGloballyPositioned)
-                Node(puzzle[8], activatedIds, onClickOf(8), node8onGloballyPositioned)
+                Node(board.puzzle[5], activatedIds, onClickOf(5), node5onGloballyPositioned)
+                Node(board.puzzle[8], activatedIds, onClickOf(8), node8onGloballyPositioned)
             }
             Spacer(modifier = Modifier.size(30.dp))
             Row(modifier = Modifier
@@ -147,12 +149,12 @@ fun BoxBoard(
                 .padding(start = 30.dp, end = 30.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Node(puzzle[9], activatedIds, onClickOf(9), node9onGloballyPositioned)
-                Node(puzzle[10], activatedIds, onClickOf(10), node10onGloballyPositioned)
-                Node(puzzle[11], activatedIds, onClickOf(11), node11onGloballyPositioned)
+                Node(board.puzzle[9], activatedIds, onClickOf(9), node9onGloballyPositioned)
+                Node(board.puzzle[10], activatedIds, onClickOf(10), node10onGloballyPositioned)
+                Node(board.puzzle[11], activatedIds, onClickOf(11), node11onGloballyPositioned)
             }
         }
 
-        BoardButtons(activity, puzzle, encodedPuzzle, activatedIds, activate, delete)
+        BoardButtons(activity, board, activatedIds, activate, delete)
     }
 }

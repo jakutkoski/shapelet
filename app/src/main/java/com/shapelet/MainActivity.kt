@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,16 +39,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.shapelet.ui.BoardTypeException
-import com.shapelet.ui.BoxBoard
-import com.shapelet.ui.Constants
-import com.shapelet.ui.CupBoard
-import com.shapelet.ui.MessageHandler
-import com.shapelet.ui.PuzzleDatabase
-import com.shapelet.ui.Solutions
-import com.shapelet.ui.Utility
-import com.shapelet.ui.Words
-import com.shapelet.ui.theme.ShapeletTheme
+import com.shapelet.components.BoxBoard
+import com.shapelet.components.CupBoard
+import com.shapelet.theme.ShapeletTheme
+import com.shapelet.utility.BoardTypeException
+import com.shapelet.utility.Constants
+import com.shapelet.utility.MessageHandler
+import com.shapelet.utility.PuzzleDatabase
+import com.shapelet.utility.SharedPrefs
+import com.shapelet.utility.Solutions
+import com.shapelet.utility.Utility
+import com.shapelet.utility.Words
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,32 +58,26 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         Words.initialize(applicationContext)
         PuzzleDatabase.initialize(applicationContext)
-
         val snackbarHostState = SnackbarHostState()
-
         setContent {
             MessageHandler.initialize(rememberCoroutineScope(), snackbarHostState)
 
+            var puzzleChoice by rememberSaveable { mutableStateOf("") }
             var solutions by rememberSaveable { mutableStateOf(listOf<String>()) }
-            val updateSolutions: (String) -> List<String> = { solution ->
+            val updater: (String) -> List<String> = { solution ->
                 solutions = solutions.toMutableList().apply { add(solution) }.toList()
                 solutions
             }
-            Solutions.initialize(solutions, updateSolutions)
+            Solutions.initialize(solutions, updater)
+            val keyWordsUnlocked = solutions.size >= Constants.UNLOCK_AMOUNT
 
-            val amountToUnlock = 5
-            val keyWordsUnlocked = solutions.size >= amountToUnlock
-
-            var puzzleChoice by rememberSaveable { mutableStateOf("") }
-
-            val savedProgress = Solutions.retrieve(this)
+            val savedProgress = SharedPrefs.retrieve(this)
             if (savedProgress != null && puzzleChoice.isBlank()) {
                 ShapeletTheme {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize().background(Constants.BACKGROUND),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -111,7 +107,7 @@ class MainActivity : ComponentActivity() {
                             ),
                             onClick = {
                                 puzzleChoice = PuzzleDatabase.puzzles.random()
-                                Solutions.clear(this@MainActivity)
+                                SharedPrefs.clear(this@MainActivity)
                             }
                         ) {
                             Text("Start a new puzzle")
@@ -121,30 +117,28 @@ class MainActivity : ComponentActivity() {
                 return@setContent
             }
 
+            if (puzzleChoice.isBlank()) {
+                puzzleChoice = PuzzleDatabase.puzzles.random()
+            }
+            val board = Utility.decode(puzzleChoice)
+
             ShapeletTheme {
                 Scaffold(
                     snackbarHost = { SnackbarHost(snackbarHostState) },
                     topBar = {
                         TopAppBar(
-                            title = {
-                                Text("Solved: ${solutions.size}")
-                            },
+                            title = { Text("Solved: ${solutions.size}") },
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = Constants.ACTIVATION_GREEN_TRANSPARENT
                             ),
                             actions = {
                                 IconButton(
-                                    enabled = true,
                                     onClick = {
                                         if (keyWordsUnlocked) {
-                                            val message = puzzleChoice
-                                                .substringAfter("|")
-                                                .substringAfter("|")
-                                                .uppercase()
-                                                .replace(",", " - ")
+                                            val message = board.keyWords.joinToString(" - ").uppercase()
                                             MessageHandler.show(true, message)
                                         } else {
-                                            val message = "Solve $amountToUnlock different ways to reveal the Key Words"
+                                            val message = "Solve ${Constants.UNLOCK_AMOUNT} different ways to reveal the Key Words"
                                             MessageHandler.show(false, message)
                                         }
                                     }
@@ -158,13 +152,9 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    if (puzzleChoice.isBlank()) {
-                        puzzleChoice = PuzzleDatabase.puzzles.random()
-                    }
-                    val board = Utility.decode(puzzleChoice)
                     when (board.type) {
-                        "box" -> BoxBoard(this, board.puzzle, puzzleChoice)
-                        "cup" -> CupBoard(this, board.puzzle, puzzleChoice)
+                        "box" -> BoxBoard(this, board)
+                        "cup" -> CupBoard(this, board)
                         else -> throw BoardTypeException(board.type)
                     }
                 }

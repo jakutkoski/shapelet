@@ -1,4 +1,4 @@
-package com.shapelet.ui
+package com.shapelet.utility
 
 import android.app.Activity
 import android.content.Context
@@ -8,6 +8,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import com.shapelet.model.Board
+import com.shapelet.model.PuzzleLetter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -15,39 +17,8 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 object Utility {
-    fun getSpelledActivated(puzzle: List<PuzzleLetter>, ids: List<Int>): String {
-        return ids.joinToString("") {
-            when (it) {
-                Constants.SUBMIT -> " - "
-                Constants.COMPLETE -> ""
-                else -> puzzle[it].letter.uppercase()
-            }
-        }.let {
-            when {
-                it.isBlank() || ids.contains(Constants.COMPLETE) -> it
-                else -> it + "_"
-            }
-        }
-    }
-
-    fun getSpelledWord(puzzle: List<PuzzleLetter>, ids: List<Int>): String {
-        // if ids has any of Constants.INDICATORS, this will throw an error
-        return ids.joinToString("") {
-            puzzle[it].letter
-        }
-    }
-
-    fun checkCanComplete(puzzle: List<PuzzleLetter>, ids: List<Int>): Boolean {
-        val fullSet = puzzle.map { it.id }.toSet()
-        return ids.containsAll(fullSet)
-    }
-
     fun checkCompleted(ids: List<Int>): Boolean {
         return ids.lastIndexOf(Constants.COMPLETE) != -1
-    }
-
-    fun checkSubmitEnabled(ids: List<Int>): Boolean {
-        return !checkCompleted(ids) && ids.count { it in Constants.INDICATORS } < 5
     }
 
     fun asSolution(puzzle: List<PuzzleLetter>, ids: List<Int>): String {
@@ -74,10 +45,6 @@ object Utility {
             }
             activate(listOf(id))
         }
-    }
-
-    fun centerNodeOffset(offset: Offset, nodeLength: Float): Offset {
-        return offset.plus(Offset(nodeLength/2.0f, nodeLength/2.0f))
     }
 
     fun drawSideLine(drawScope: DrawScope, start: Offset, end: Offset, nodeLength: Float) {
@@ -136,11 +103,16 @@ object Utility {
         return Board(
             type = type,
             puzzle = puzzleLetters,
-            keyWords = keyWords
+            keyWords = keyWords,
+            encoded = boardEncoding
         )
     }
 
-    fun getIncompatibleIds(boardType: String, id: Int): Set<Int> {
+    private fun centerNodeOffset(offset: Offset, nodeLength: Float): Offset {
+        return offset.plus(Offset(nodeLength/2.0f, nodeLength/2.0f))
+    }
+
+    private fun getIncompatibleIds(boardType: String, id: Int): Set<Int> {
         return when (boardType) {
             "box" -> when (id) {
                 0,1,2 -> setOf(0,1,2)
@@ -203,11 +175,11 @@ object Solutions {
     private lateinit var solutions: List<String>
     private lateinit var updater: (String) -> List<String>
 
-    fun initialize(solutionsList: List<String>, updaterLambda: (String) -> List<String>) {
+    fun initialize(givenSolutions: List<String>, givenUpdater: (String) -> List<String>) {
         if (initialized) return
         initialized = true
-        solutions = solutionsList
-        updater = updaterLambda
+        solutions = givenSolutions
+        updater = givenUpdater
     }
 
     fun update(solution: String) {
@@ -215,14 +187,17 @@ object Solutions {
     }
 
     fun update(givenSolutions: List<String>) {
-        givenSolutions.forEach {
-            solutions = updater(it)
-        }
+        givenSolutions.forEach { update(it) }
     }
 
     fun get(): List<String> {
         return solutions
     }
+}
+
+object SharedPrefs {
+    // value should look like this:
+    // type|letters|key,words/user,solution,number,one+user,solution,number,two+...
 
     fun persist(activity: Activity, puzzle: String, userSolutions: List<String>) {
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
@@ -249,7 +224,6 @@ object Solutions {
         val savedSolutions = separated[1].split("+")
         return Pair(puzzle, savedSolutions)
     }
-
 }
 
 object MessageHandler {
@@ -283,26 +257,10 @@ object Constants {
     const val SUBMIT = -9001
     const val COMPLETE = -9002
     const val STROKE_WIDTH = 4.0f
+    const val UNLOCK_AMOUNT = 5
     val INDICATORS = listOf(SUBMIT, COMPLETE)
     val DOTTED_PATH_EFFECT = PathEffect.dashPathEffect(listOf(15.0f, 15.0f).toFloatArray(), 15.0f)
     val ACTIVATION_GREEN = Color(0xFF0AC27B)
     val ACTIVATION_GREEN_TRANSPARENT = Color(0x330AC27B)
+    val BACKGROUND = Color(0xFFEEEEEE)
 }
-
-data class PuzzleLetter(
-    val id: Int,
-    val letter: String,
-    val incompatibleIds: Set<Int>
-)
-
-data class Board(
-    val type: String,
-    val puzzle: List<PuzzleLetter>,
-    val keyWords: List<String>
-)
-
-class GetOffsetException(id: Int): Exception("cannot get offset of node $id since it does not exist")
-
-class BoardTypeException(type: String): Exception("board type $type does not exist")
-
-class InvalidIdException(id: Int, boardType: String): Exception("id $id is not valid for board type $boardType")

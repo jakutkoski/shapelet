@@ -1,4 +1,4 @@
-package com.shapelet.ui.theme
+package com.shapelet.theme
 
 import androidx.compose.ui.graphics.Color
 

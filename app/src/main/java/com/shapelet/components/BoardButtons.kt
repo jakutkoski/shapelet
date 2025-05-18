@@ -1,4 +1,4 @@
-package com.shapelet.ui
+package com.shapelet.components
 
 import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
@@ -19,17 +19,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.shapelet.ui.Utility.asSolution
-import com.shapelet.ui.Utility.checkCanComplete
-import com.shapelet.ui.Utility.checkCompleted
-import com.shapelet.ui.Utility.checkSubmitEnabled
-import com.shapelet.ui.Utility.getSpelledWord
+import com.shapelet.model.Board
+import com.shapelet.model.PuzzleLetter
+import com.shapelet.utility.Constants
+import com.shapelet.utility.MessageHandler
+import com.shapelet.utility.SharedPrefs
+import com.shapelet.utility.Solutions
+import com.shapelet.utility.Utility.asSolution
+import com.shapelet.utility.Utility.checkCompleted
+import com.shapelet.utility.Words
 
 @Composable
 fun BoardButtons(
     activity: Activity,
-    puzzle: List<PuzzleLetter>,
-    encodedPuzzle: String,
+    board: Board,
     activatedIds: List<Int>,
     activate: (List<Int>) -> List<Int>,
     delete: (Int) -> List<Int>
@@ -85,16 +88,16 @@ fun BoardButtons(
                     .subList(startOfMostRecentIdSequence, activatedIds.size)
                     .dropWhile { it in Constants.INDICATORS }
                 if (mostRecentIdSequence.size < 3) return@onClick
-                if (getSpelledWord(puzzle, mostRecentIdSequence) !in Words.allWords) {
+                if (getSpelledWord(board.puzzle, mostRecentIdSequence) !in Words.allWords) {
                     MessageHandler.show(false, "Invalid Word")
                     return@onClick
                 }
-                if (checkCanComplete(puzzle, activatedIds)) {
-                    if (asSolution(puzzle, activatedIds) in Solutions.get()) {
+                if (checkCanComplete(board.puzzle, activatedIds)) {
+                    if (asSolution(board.puzzle, activatedIds) in Solutions.get()) {
                         MessageHandler.show(false, "Already solved this way")
                     } else {
-                        Solutions.update(asSolution(puzzle, activatedIds))
-                        Solutions.persist(activity, encodedPuzzle, Solutions.get())
+                        Solutions.update(asSolution(board.puzzle, activatedIds))
+                        SharedPrefs.persist(activity, board.encoded, Solutions.get())
                         activate(listOf(Constants.COMPLETE))
                         MessageHandler.show(false, "Solved!")
                     }
@@ -106,4 +109,20 @@ fun BoardButtons(
             Text(text = "Submit")
         }
     }
+}
+
+fun getSpelledWord(puzzle: List<PuzzleLetter>, ids: List<Int>): String {
+    // if ids has any of Constants.INDICATORS, this will throw an error
+    return ids.joinToString("") {
+        puzzle[it].letter
+    }
+}
+
+fun checkCanComplete(puzzle: List<PuzzleLetter>, ids: List<Int>): Boolean {
+    val fullSet = puzzle.map { it.id }.toSet()
+    return ids.containsAll(fullSet)
+}
+
+fun checkSubmitEnabled(ids: List<Int>): Boolean {
+    return !checkCompleted(ids) && ids.count { it in Constants.INDICATORS } < 5
 }

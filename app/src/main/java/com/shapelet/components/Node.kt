@@ -1,4 +1,4 @@
-package com.shapelet.ui
+package com.shapelet.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,6 +15,8 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.shapelet.model.PuzzleLetter
+import com.shapelet.utility.Constants
 
 @Composable
 fun Node(
