@@ -1,6 +1,5 @@
 ### TODO FINAL
 
-- add screenshots to readme
 - generate final apk
 
 ### State of this project
@@ -39,4 +38,6 @@ This encoding would create:
 
 ### Screenshots
 
-TODO after finalized
+![screenshot 1](/screenshots/screenshot1.png?raw=true "Screenshot 1")
+
+![screenshot 2](/screenshots/screenshot2.png?raw=true "Screenshot 2")
