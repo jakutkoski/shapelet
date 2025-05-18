@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import com.shapelet.ui.Utility.asSolution
 
 @Composable
 fun SubmittedLetters(
@@ -24,7 +26,10 @@ fun SubmittedLetters(
         Text(
             text = Utility.getSpelledActivated(puzzle, activatedIds),
             modifier = Modifier.fillMaxHeight(),
-            maxLines = 2
+            maxLines = 2,
+            fontStyle = if (Solutions.get().any {
+                it.startsWith(asSolution(puzzle, activatedIds))
+            }) FontStyle.Italic else FontStyle.Normal
         )
     }
 }

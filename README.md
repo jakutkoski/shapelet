@@ -17,7 +17,7 @@ Here is a list of things I would work on if I was still working on it:
 - create a list page to list out all the puzzles (right now the game just picks a random one upon opening the app)
 - create a settings page
 - determine other puzzle types
-- plenty of UI improvements
+- many UI improvements
 - performance profiling and enhancements
 - more effort into puzzle curation
 - code to analyze how difficult a puzzle is based on vowel placement, high-frequency letters (e.g. R and S), etc.

@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Text("Continue with previous puzzle")
                         }
-                        Spacer(modifier = Modifier.size(10.dp))
+                        Spacer(modifier = Modifier.size(50.dp))
                         OutlinedButton(
                             shape = CutCornerShape(CornerSize(8)),
                             modifier = Modifier.width(300.dp).height(50.dp),
