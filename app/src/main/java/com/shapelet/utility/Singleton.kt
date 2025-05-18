@@ -249,7 +249,7 @@ object Constants {
     const val SUBMIT = -9001
     const val COMPLETE = -9002
     const val STROKE_WIDTH = 4.0f
-    const val UNLOCK_AMOUNT = 5
+    const val UNLOCK_AMOUNT = 10
     val INDICATORS = listOf(SUBMIT, COMPLETE)
     val DOTTED_PATH_EFFECT = PathEffect.dashPathEffect(listOf(15.0f, 15.0f).toFloatArray(), 15.0f)
     val ACTIVATION_GREEN = Color(0xFF0AC27B)

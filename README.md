@@ -1,8 +1,5 @@
 ### TODO FINAL
 
-- mild puzzle curation
-- testing
-- decide how many solves required to reveal key words
 - add screenshots to readme
 - generate final apk
 
