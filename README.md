@@ -1,6 +1,5 @@
 ### TODO FINAL
 
-- app icon
 - mild puzzle curation
 - testing
 - decide how many solves required to reveal key words
