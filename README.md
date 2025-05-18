@@ -38,6 +38,7 @@ This encoding would create:
 
 ### Screenshots
 
-![screenshot 1](/screenshots/screenshot1.png?raw=true "Screenshot 1")
-
-![screenshot 2](/screenshots/screenshot2.png?raw=true "Screenshot 2")
+<p float="left">
+  <img src="/screenshots/screenshot1.png" width=30% height=30% />
+  <img src="/screenshots/screenshot2.png" width=30% height=30% /> 
+</p>
