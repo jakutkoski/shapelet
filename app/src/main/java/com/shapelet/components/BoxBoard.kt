@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -31,7 +32,8 @@ import com.shapelet.utility.Utility
 @Composable
 fun BoxBoard(
     activity: Activity,
-    board: Board
+    board: Board,
+    paddingValues: PaddingValues
 ) {
     var activatedIds by rememberSaveable { mutableStateOf(listOf<Int>()) }
     val activate: (List<Int>) -> List<Int> = { ids ->
@@ -101,6 +103,7 @@ fun BoxBoard(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        Spacer(Modifier.size(paddingValues.calculateTopPadding()))
         SubmittedLetters(board, activatedIds)
 
         Column(modifier = Modifier

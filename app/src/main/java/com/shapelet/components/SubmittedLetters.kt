@@ -23,8 +23,8 @@ fun SubmittedLetters(
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .fillMaxHeight(0.25f)
-        .padding(start = 10.dp, top = 120.dp, end = 10.dp),
+        .fillMaxHeight(0.15f)
+        .padding(start = 10.dp, top = 25.dp, end = 10.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Text(

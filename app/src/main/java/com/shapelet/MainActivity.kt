@@ -1,6 +1,5 @@
 package com.shapelet
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -51,7 +50,6 @@ import com.shapelet.utility.Solutions
 import com.shapelet.utility.Utility
 import com.shapelet.utility.Words
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
 
@@ -154,10 +152,10 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                ) {
+                ) { paddingValues ->
                     when (board.type) {
-                        "box" -> BoxBoard(this, board)
-                        "cup" -> CupBoard(this, board)
+                        "box" -> BoxBoard(this, board, paddingValues)
+                        "cup" -> CupBoard(this, board, paddingValues)
                         else -> throw BoardTypeException(board.type)
                     }
                 }
